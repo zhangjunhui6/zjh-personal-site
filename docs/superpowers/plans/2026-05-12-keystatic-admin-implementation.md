@@ -619,6 +619,8 @@ The site uses Keystatic GitHub mode in production. Configure these Cloudflare Pa
 - `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`: copy from local `.env`.
 
 Do not commit real secret values. The GitHub App should be installed only on `zhangjunhui6/zjh-personal-site`.
+
+The Cloudflare adapter enables Astro sessions with the default `SESSION` KV binding. Astro's Cloudflare adapter can usually provision this automatically during deploy. If Cloudflare reports `Invalid binding SESSION`, add a KV binding named `SESSION` in the Cloudflare project settings, or configure a custom `sessionKVBindingName` in `astro.config.mjs`.
 ````
 
 - [ ] **Step 2: Build before deploy**

@@ -28,3 +28,24 @@ The project currently uses Astro 5 and pins Vite to `6.4.2` because `@keystatic/
 Astro uses `output: 'static'` with the Cloudflare adapter. Public content pages remain prerendered, while Keystatic admin and API routes are emitted as Cloudflare Pages Functions. The adapter sets `imageService: 'compile'` so prerendered pages can optimize images at build time without requiring Sharp in the Cloudflare runtime.
 
 Keystatic storage mode is controlled by `PUBLIC_KEYSTATIC_STORAGE`, with `KEYSTATIC_STORAGE` retained as a server-side compatibility fallback. Set both to `github` in Cloudflare Pages production.
+
+## Keystatic Admin
+
+The admin entrypoint is:
+
+```text
+https://zjh-personal-site.pages.dev/keystatic
+```
+
+Production uses Keystatic GitHub mode. Configure these Cloudflare Pages production environment variables before deploying the admin:
+
+- `PUBLIC_KEYSTATIC_STORAGE`: `github`
+- `KEYSTATIC_STORAGE`: `github`
+- `KEYSTATIC_GITHUB_CLIENT_ID`: copy from local `.env`
+- `KEYSTATIC_GITHUB_CLIENT_SECRET`: copy from local `.env`
+- `KEYSTATIC_SECRET`: copy from local `.env`
+- `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`: copy from local `.env`
+
+Do not commit real secret values. The GitHub App should be installed only on `zhangjunhui6/zjh-personal-site`.
+
+The Cloudflare adapter also enables Astro sessions with the default `SESSION` KV binding. Astro's Cloudflare adapter can usually provision this automatically during deploy. If Cloudflare reports `Invalid binding SESSION`, add a KV binding named `SESSION` in the Cloudflare project settings, or configure a custom `sessionKVBindingName` in `astro.config.mjs`.
