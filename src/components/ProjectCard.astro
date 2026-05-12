@@ -8,10 +8,17 @@ interface Props {
 }
 
 const { title, description, href, stack, status } = Astro.props;
+const statusLabels: Record<string, string> = {
+  active: '进行中',
+  paused: '暂停',
+  finished: '已完成',
+  archive: '归档',
+};
+const statusLabel = statusLabels[status] ?? status;
 ---
 
 <article class="quiet-card p-5">
-  <p class="mb-3 text-xs font-semibold uppercase text-[var(--color-clay)]">{status}</p>
+  <p class="mb-3 text-xs font-semibold uppercase text-[var(--color-clay)]">{statusLabel}</p>
   <h3 class="mb-3 mt-0 text-xl font-semibold">
     <a class="no-underline" href={href}>{title}</a>
   </h3>

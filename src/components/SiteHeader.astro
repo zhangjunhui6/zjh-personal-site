@@ -4,11 +4,11 @@ import { site } from '@/config/site';
 const currentPath = Astro.url.pathname;
 ---
 
-<header class="container flex items-center justify-between py-6">
+<header class="container flex flex-col items-start gap-4 py-6 sm:flex-row sm:items-center sm:justify-between">
   <a class="text-lg font-semibold no-underline" href="/" aria-label="返回首页">
     {site.name}
   </a>
-  <nav class="flex flex-wrap items-center justify-end gap-4 text-sm text-[var(--color-muted)]" aria-label="主导航">
+  <nav class="flex flex-wrap items-center gap-4 text-sm text-[var(--color-muted)] sm:justify-end" aria-label="主导航">
     {site.nav.map((item) => {
       const isActive = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href));
 
