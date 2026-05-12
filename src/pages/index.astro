@@ -52,4 +52,17 @@ const projects = featuredProjects(await getCollection('projects')).slice(0, 2);
       ))}
     </div>
   </section>
+
+  <section class="container py-10">
+    <div class="quiet-card grid gap-6 p-6 md:grid-cols-[0.8fr_1.2fr] md:items-center">
+      <div>
+        <p class="mb-3 text-sm font-semibold uppercase text-[var(--color-clay)]">About</p>
+        <h2 class="m-0 text-2xl font-semibold md:text-3xl">关于这里</h2>
+      </div>
+      <div>
+        <p class="mt-0 leading-8 text-[var(--color-muted)]">这是一个长期记录型个人空间，会慢慢放进技术笔记、生活观察和项目实验。</p>
+        <a class="text-sm font-semibold text-[var(--color-leaf)]" href="/about/">了解更多</a>
+      </div>
+    </div>
+  </section>
 </BaseLayout>
