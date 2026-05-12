@@ -1,0 +1,167 @@
+import { collection, config, fields } from '@keystatic/core';
+
+declare const process: {
+  env: {
+    KEYSTATIC_STORAGE?: string;
+  };
+};
+
+const storage =
+  process.env.KEYSTATIC_STORAGE === 'github'
+    ? ({
+        kind: 'github',
+        repo: 'zhangjunhui6/zjh-personal-site',
+      } as const)
+    : ({ kind: 'local' } as const);
+
+const langOptions = [
+  { label: 'Chinese', value: 'zh' },
+  { label: 'English', value: 'en' },
+] as const;
+
+const baseEntryFields = {
+  title: fields.slug({
+    name: {
+      label: 'Title',
+      validation: { isRequired: true },
+    },
+  }),
+  description: fields.text({
+    label: 'Description',
+    validation: { isRequired: true },
+    multiline: true,
+  }),
+  date: fields.date({
+    label: 'Date',
+    validation: { isRequired: true },
+  }),
+  tags: fields.array(fields.text({ label: 'Tag' }), {
+    label: 'Tags',
+    itemLabel: (props) => props.value,
+  }),
+  lang: fields.select({
+    label: 'Language',
+    options: langOptions,
+    defaultValue: 'zh',
+  }),
+  draft: fields.checkbox({
+    label: 'Draft',
+    defaultValue: false,
+  }),
+  content: fields.markdoc({
+    label: 'Content',
+    extension: 'md',
+  }),
+};
+
+const contentFormat = {
+  contentField: 'content',
+} as const;
+
+export default config({
+  storage,
+  ui: {
+    brand: { name: 'ZJH Personal Site' },
+  },
+  collections: {
+    notes: collection({
+      label: 'Notes',
+      path: 'src/content/notes/*',
+      slugField: 'title',
+      entryLayout: 'content',
+      format: contentFormat,
+      schema: {
+        ...baseEntryFields,
+        updated: fields.date({ label: 'Updated' }),
+      },
+    }),
+    journal: collection({
+      label: 'Journal',
+      path: 'src/content/journal/*',
+      slugField: 'title',
+      entryLayout: 'content',
+      format: contentFormat,
+      schema: {
+        ...baseEntryFields,
+        mood: fields.text({ label: 'Mood' }),
+        location: fields.text({ label: 'Location' }),
+        images: fields.array(fields.text({ label: 'Image' }), {
+          label: 'Images',
+          itemLabel: (props) => props.value,
+        }),
+      },
+    }),
+    projects: collection({
+      label: 'Projects',
+      path: 'src/content/projects/*',
+      slugField: 'title',
+      entryLayout: 'content',
+      format: contentFormat,
+      schema: {
+        title: fields.slug({
+          name: {
+            label: 'Title',
+            validation: { isRequired: true },
+          },
+        }),
+        description: fields.text({
+          label: 'Description',
+          validation: { isRequired: true },
+          multiline: true,
+        }),
+        date: fields.date({
+          label: 'Date',
+          validation: { isRequired: true },
+        }),
+        status: fields.select({
+          label: 'Status',
+          options: [
+            { label: 'Active', value: 'active' },
+            { label: 'Paused', value: 'paused' },
+            { label: 'Finished', value: 'finished' },
+            { label: 'Archive', value: 'archive' },
+          ],
+          defaultValue: 'active',
+        }),
+        stack: fields.array(fields.text({ label: 'Technology' }), {
+          label: 'Stack',
+          itemLabel: (props) => props.value,
+        }),
+        links: fields.array(
+          fields.object({
+            label: fields.text({
+              label: 'Label',
+              validation: { isRequired: true },
+            }),
+            href: fields.url({
+              label: 'URL',
+              validation: { isRequired: true },
+            }),
+          }),
+          {
+            label: 'Links',
+            itemLabel: (props) => props.fields.label.value,
+          },
+        ),
+        cover: fields.text({ label: 'Cover' }),
+        featured: fields.checkbox({
+          label: 'Featured',
+          defaultValue: false,
+        }),
+        lang: fields.select({
+          label: 'Language',
+          options: langOptions,
+          defaultValue: 'zh',
+        }),
+        draft: fields.checkbox({
+          label: 'Draft',
+          defaultValue: false,
+        }),
+        content: fields.markdoc({
+          label: 'Content',
+          extension: 'md',
+        }),
+      },
+    }),
+  },
+});
