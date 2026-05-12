@@ -564,8 +564,9 @@ Expected user-owned GitHub App settings:
 
 ```text
 Repository: zhangjunhui6/zjh-personal-site
-Callback URL: http://127.0.0.1:4321/keystatic/api/github/oauth/callback
-Deployed callback URL: https://zjh-personal-site.pages.dev/keystatic/api/github/oauth/callback
+GitHub App slug: zhangjunhui6-keystatic
+Callback URL: http://127.0.0.1:4321/api/keystatic/github/oauth/callback
+Deployed callback URL: https://zjh-personal-site.pages.dev/api/keystatic/github/oauth/callback
 Repository access: only zhangjunhui6/zjh-personal-site
 ```
 
@@ -616,9 +617,16 @@ The site uses Keystatic GitHub mode in production. Configure these Cloudflare Pa
 - `KEYSTATIC_GITHUB_CLIENT_ID`: copy from local `.env`.
 - `KEYSTATIC_GITHUB_CLIENT_SECRET`: copy from local `.env`.
 - `KEYSTATIC_SECRET`: copy from local `.env`.
-- `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`: copy from local `.env`.
+- `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`: set to `zhangjunhui6-keystatic`.
 
-Do not commit real secret values. The GitHub App should be installed only on `zhangjunhui6/zjh-personal-site`.
+Do not commit real secret values. The GitHub App `zhangjunhui6-keystatic` should be installed only on `zhangjunhui6/zjh-personal-site`.
+
+The configured OAuth callback URLs are:
+
+```text
+http://127.0.0.1:4321/api/keystatic/github/oauth/callback
+https://zjh-personal-site.pages.dev/api/keystatic/github/oauth/callback
+```
 
 The Cloudflare adapter enables Astro sessions with the default `SESSION` KV binding. Astro's Cloudflare adapter can usually provision this automatically during deploy. If Cloudflare reports `Invalid binding SESSION`, add a KV binding named `SESSION` in the Cloudflare project settings, or configure a custom `sessionKVBindingName` in `astro.config.mjs`.
 ````
