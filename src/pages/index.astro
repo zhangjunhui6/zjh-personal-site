@@ -1,0 +1,55 @@
+---
+import { getCollection } from 'astro:content';
+import ContentCard from '@/components/ContentCard.astro';
+import ProjectCard from '@/components/ProjectCard.astro';
+import SectionHeading from '@/components/SectionHeading.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { featuredProjects, isPublished, newestFirst } from '@/utils/collections';
+
+const notes = newestFirst((await getCollection('notes')).filter(isPublished)).slice(0, 3);
+const journal = newestFirst((await getCollection('journal')).filter(isPublished)).slice(0, 2);
+const projects = featuredProjects(await getCollection('projects')).slice(0, 2);
+---
+
+<BaseLayout>
+  <section class="container grid gap-10 py-14 md:grid-cols-[1.2fr_0.8fr] md:items-end">
+    <div>
+      <p class="mb-4 text-sm font-semibold uppercase text-[var(--color-clay)]">Warm Studio</p>
+      <h1 class="m-0 max-w-3xl text-5xl font-semibold leading-tight md:text-7xl">
+        记录技术、生活和正在形成的想法。
+      </h1>
+    </div>
+    <div class="quiet-card p-6">
+      <p class="m-0 leading-8 text-[var(--color-muted)]">
+        这里会放一些慢慢写下来的文章、生活片段和项目实验。不是为了展示全部，而是为了给长期积累留一个稳定的位置。
+      </p>
+    </div>
+  </section>
+
+  <section class="container py-10">
+    <SectionHeading eyebrow="Notes" title="最近写下" href="/notes/" />
+    <div class="grid gap-4 md:grid-cols-3">
+      {notes.map((entry) => (
+        <ContentCard title={entry.data.title} description={entry.data.description} date={entry.data.date} href={`/notes/${entry.id}/`} />
+      ))}
+    </div>
+  </section>
+
+  <section class="container py-10">
+    <SectionHeading eyebrow="Journal" title="生活切片" href="/journal/" />
+    <div class="grid gap-4 md:grid-cols-2">
+      {journal.map((entry) => (
+        <ContentCard title={entry.data.title} description={entry.data.description} date={entry.data.date} href={`/journal/${entry.id}/`} />
+      ))}
+    </div>
+  </section>
+
+  <section class="container py-10">
+    <SectionHeading eyebrow="Projects" title="正在做的事" href="/projects/" />
+    <div class="grid gap-4 md:grid-cols-2">
+      {projects.map((entry) => (
+        <ProjectCard title={entry.data.title} description={entry.data.description} href={`/projects/${entry.id}/`} stack={entry.data.stack} status={entry.data.status} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

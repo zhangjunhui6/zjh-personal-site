@@ -1,0 +1,22 @@
+---
+interface Props {
+  title: string;
+  description: string;
+  href: string;
+  stack: string[];
+  status: string;
+}
+
+const { title, description, href, stack, status } = Astro.props;
+---
+
+<article class="quiet-card p-5">
+  <p class="mb-3 text-xs font-semibold uppercase text-[var(--color-clay)]">{status}</p>
+  <h3 class="mb-3 mt-0 text-xl font-semibold">
+    <a class="no-underline" href={href}>{title}</a>
+  </h3>
+  <p class="mb-4 leading-7 text-[var(--color-muted)]">{description}</p>
+  <div class="flex flex-wrap gap-2">
+    {stack.map((item) => <span class="rounded-full bg-[var(--color-sky)] px-3 py-1 text-xs text-[var(--color-ink)]">{item}</span>)}
+  </div>
+</article>
