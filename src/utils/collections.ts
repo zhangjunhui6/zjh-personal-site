@@ -10,7 +10,10 @@ export function isPublished<T extends DatedEntry>(entry: T): boolean {
 }
 
 export function newestFirst<T extends DatedEntry>(entries: T[]): T[] {
-  return [...entries].sort((a, b) => b.data.date.valueOf() - a.data.date.valueOf());
+  return [...entries].sort((a, b) => {
+    const byDate = b.data.date.valueOf() - a.data.date.valueOf();
+    return byDate === 0 ? a.id.localeCompare(b.id) : byDate;
+  });
 }
 
 export function featuredProjects(entries: CollectionEntry<'projects'>[]): CollectionEntry<'projects'>[] {
