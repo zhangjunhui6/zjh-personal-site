@@ -6,8 +6,14 @@ declare const process: {
   };
 };
 
+const storageMode = process.env.KEYSTATIC_STORAGE ?? 'local';
+
+if (storageMode !== 'local' && storageMode !== 'github') {
+  throw new Error('KEYSTATIC_STORAGE must be either "local" or "github".');
+}
+
 const storage =
-  process.env.KEYSTATIC_STORAGE === 'github'
+  storageMode === 'github'
     ? ({
         kind: 'github',
         repo: 'zhangjunhui6/zjh-personal-site',
