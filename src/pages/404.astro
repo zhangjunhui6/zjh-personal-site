@@ -1,0 +1,12 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+---
+
+<BaseLayout title="页面没有找到" description="这个页面不存在或已经移动。">
+  <section class="container py-20">
+    <p class="mb-3 text-sm font-semibold uppercase text-[var(--color-clay)]">404</p>
+    <h1 class="mb-4 text-4xl font-semibold">页面没有找到</h1>
+    <p class="mb-8 max-w-xl leading-8 text-[var(--color-muted)]">可能是链接写错了，也可能是这个记录还没有被放进来。</p>
+    <a class="rounded-full bg-[var(--color-leaf)] px-5 py-3 text-white no-underline" href="/">回到首页</a>
+  </section>
+</BaseLayout>

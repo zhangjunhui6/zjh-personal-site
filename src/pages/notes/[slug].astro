@@ -1,0 +1,17 @@
+---
+import { getCollection, render } from 'astro:content';
+import ContentLayout from '@/layouts/ContentLayout.astro';
+import { isPublished } from '@/utils/collections';
+
+export async function getStaticPaths() {
+  const notes = (await getCollection('notes')).filter(isPublished);
+  return notes.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+}
+
+const { entry } = Astro.props;
+const { Content } = await render(entry);
+---
+
+<ContentLayout title={entry.data.title} description={entry.data.description} date={entry.data.date} tags={entry.data.tags}>
+  <Content />
+</ContentLayout>
