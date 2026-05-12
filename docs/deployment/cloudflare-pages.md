@@ -12,6 +12,9 @@ Cloudflare Pages settings:
 - Production branch: `main`
 - Build command: `npm run build`
 - Build output directory: `dist`
-- Node version: use the Cloudflare default unless a build error asks for a newer supported version.
+- Build system version: v3
+- Environment variable: `NODE_VERSION=22.16.0`
 
 The first public URL can use the free `*.pages.dev` domain. Update `site.url` in `src/config/site.ts` and `site` in `astro.config.mjs` after the final Pages URL or custom domain is known.
+
+The project pins Vite to `7.3.3` because Astro `6.3.1` currently builds against Vite 7, while `@tailwindcss/vite` allows Vite 8. Keep the `vite` override until an Astro/Tailwind upgrade is verified with `npm run build`.
