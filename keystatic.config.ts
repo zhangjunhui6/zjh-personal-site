@@ -1,15 +1,15 @@
 import { collection, config, fields } from '@keystatic/core';
 
-declare const process: {
-  env: {
-    KEYSTATIC_STORAGE?: string;
-  };
-};
-
-const storageMode = process.env.KEYSTATIC_STORAGE ?? 'local';
+const storageMode =
+  [
+    import.meta.env.PUBLIC_KEYSTATIC_STORAGE,
+    import.meta.env.KEYSTATIC_STORAGE,
+  ].find((value) => typeof value === 'string' && value.length > 0) ?? 'local';
 
 if (storageMode !== 'local' && storageMode !== 'github') {
-  throw new Error('KEYSTATIC_STORAGE must be either "local" or "github".');
+  throw new Error(
+    'PUBLIC_KEYSTATIC_STORAGE or KEYSTATIC_STORAGE must be either "local" or "github".',
+  );
 }
 
 const storage =
@@ -39,6 +39,7 @@ const baseEntryFields = {
   }),
   date: fields.date({
     label: 'Date',
+    defaultValue: { kind: 'today' },
     validation: { isRequired: true },
   }),
   tags: fields.array(fields.text({ label: 'Tag' }), {
@@ -117,6 +118,7 @@ export default config({
         }),
         date: fields.date({
           label: 'Date',
+          defaultValue: { kind: 'today' },
           validation: { isRequired: true },
         }),
         status: fields.select({

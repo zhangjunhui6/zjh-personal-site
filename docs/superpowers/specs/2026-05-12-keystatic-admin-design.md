@@ -77,13 +77,15 @@ NODE_VERSION=22.16.0
 并新增 Keystatic GitHub mode 需要的环境变量。具体变量以 Keystatic 创建 GitHub App 后生成的 `.env` 为准，预计包括：
 
 ```text
+PUBLIC_KEYSTATIC_STORAGE
+KEYSTATIC_STORAGE
 KEYSTATIC_GITHUB_CLIENT_ID
 KEYSTATIC_GITHUB_CLIENT_SECRET
 KEYSTATIC_SECRET
 PUBLIC_KEYSTATIC_GITHUB_APP_SLUG
 ```
 
-这些密钥只配置到本地 `.env` 和 Cloudflare Pages 环境变量，不提交到仓库。
+这些密钥只配置到本地 `.env` 和 Cloudflare Pages 环境变量，不提交到仓库。`PUBLIC_KEYSTATIC_STORAGE` 不是密钥，用于让浏览器端 Keystatic Admin 知道当前是 `local` 还是 `github` 存储模式；生产环境设置为 `github`。
 
 ## 内容模型
 
