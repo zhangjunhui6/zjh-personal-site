@@ -6,13 +6,13 @@
 
 **Architecture:** Add Keystatic as an Astro integration with three collections mapped to the existing `src/content/notes`, `src/content/journal`, and `src/content/projects` folders. Keep public site pages pre-rendered by using Astro hybrid output with the Cloudflare adapter, while Keystatic uses server routes. Support local storage for field smoke tests and GitHub storage for the deployed admin by switching on `KEYSTATIC_STORAGE`.
 
-**Tech Stack:** Astro 6, Keystatic, React integration for the admin UI, Cloudflare adapter, GitHub mode, existing Markdown content collections.
+**Tech Stack:** Astro 5, Keystatic, React integration for the admin UI, Cloudflare adapter, GitHub mode, existing Markdown content collections.
 
 ---
 
 ## File Structure
 
-- Modify `package.json`: add Keystatic, React, Markdoc, and Cloudflare adapter dependencies.
+- Modify `package.json`: add Keystatic, React, Markdoc, and Cloudflare adapter dependencies; align Astro-related packages to Astro 5 because `@keystatic/astro@5.0.6` supports Astro 2-5.
 - Modify `package-lock.json`: lock the new dependency tree after installation.
 - Modify `astro.config.mjs`: add React, Markdoc, Keystatic, Cloudflare adapter, and `output: 'hybrid'`.
 - Create `keystatic.config.ts`: define storage mode and the `notes`, `journal`, and `projects` collections.
@@ -38,27 +38,37 @@ git switch -c feature/keystatic-admin
 
 Expected: branch changes from `main` to `feature/keystatic-admin`.
 
-- [ ] **Step 2: Install dependencies**
+- [ ] **Step 2: Install Astro 5-compatible dependencies**
 
 Run:
 
 ```bash
-npm install @keystatic/core @keystatic/astro @astrojs/react @astrojs/markdoc @astrojs/cloudflare
+npm install astro@5.18.1 @astrojs/mdx@4.3.14 @keystatic/core @keystatic/astro@5.0.6 @astrojs/react@4.4.2 @astrojs/markdoc@0.12.11 @astrojs/cloudflare@12.6.13
 ```
 
-Expected: `package.json` gains five dependencies and `package-lock.json` updates.
+Expected: `package.json` aligns Astro and its integrations to Astro 5-compatible versions, adds Keystatic packages, and `package-lock.json` updates.
 
-- [ ] **Step 3: Verify dependency tree**
+- [ ] **Step 3: Pin Vite for Astro 5**
 
 Run:
 
 ```bash
-npm ls @keystatic/core @keystatic/astro @astrojs/react @astrojs/markdoc @astrojs/cloudflare
+npm install -D vite@6.4.2
 ```
 
-Expected: all five packages resolve without `UNMET DEPENDENCY`.
+Expected: `package.json` has `devDependencies.vite` and `overrides.vite` set to `6.4.2`.
 
-- [ ] **Step 4: Commit dependency install**
+- [ ] **Step 4: Verify dependency tree**
+
+Run:
+
+```bash
+npm ls astro @astrojs/mdx @keystatic/core @keystatic/astro @astrojs/react @astrojs/markdoc @astrojs/cloudflare vite
+```
+
+Expected: all packages resolve without `UNMET DEPENDENCY`; `astro@5.18.1`, `@keystatic/astro@5.0.6`, and `vite@6.4.2` are installed.
+
+- [ ] **Step 5: Commit dependency install**
 
 Run:
 
@@ -353,7 +363,7 @@ Run:
 npm ls vite @tailwindcss/vite astro
 ```
 
-Expected: `vite@7.3.3` remains installed and overridden.
+Expected: `vite@6.4.2` remains installed and overridden.
 
 - [ ] **Step 5: Commit Astro integration wiring**
 

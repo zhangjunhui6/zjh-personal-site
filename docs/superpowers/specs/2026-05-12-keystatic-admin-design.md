@@ -56,12 +56,13 @@ https://zjh-personal-site.pages.dev/keystatic
 
 采用 Keystatic + Astro + GitHub mode。
 
-需要新增的核心模块：
+需要新增或调整的核心模块：
 
 - `@keystatic/core`：定义后台字段、集合和 GitHub 存储。
 - `@keystatic/astro`：在 Astro 中挂载 `/keystatic` 后台路由和所需 API。
 - `@astrojs/react`：Keystatic Admin UI 需要 React。
 - `@astrojs/cloudflare`：线上 `/keystatic` 需要服务端 API，Cloudflare Pages 需要通过 adapter 提供运行时能力。
+- `astro@5.x`：`@keystatic/astro@5.0.6` 当前支持 Astro 2-5，第一版后台采用 Astro 5 兼容矩阵，而不是强行忽略 peer dependency。
 
 Astro 配置需要从纯静态站升级为 Cloudflare 可运行的形式。公共内容页仍保持预渲染，避免为了后台把整站变成动态渲染页面。后台和后台 API 由 Keystatic integration 挂载。
 
@@ -184,7 +185,7 @@ Cloudflare adapter 风险：
 本地验收：
 
 - `npm run build` 通过。
-- `npm ls vite @tailwindcss/vite astro` 确认 Vite 仍为 `7.3.3`。
+- `npm ls vite @tailwindcss/vite astro` 确认 Astro 与 Vite 处于 Keystatic 兼容矩阵，预期为 Astro 5 与 Vite 6。
 - 本地 `/keystatic` 能打开后台。
 - 本地后台能读取现有 notes、journal、projects。
 - 新建一篇草稿内容后生成正确 `.md` 文件。
