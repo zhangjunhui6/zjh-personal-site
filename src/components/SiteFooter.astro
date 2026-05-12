@@ -1,0 +1,11 @@
+---
+import { site } from '@/config/site';
+const year = new Date().getFullYear();
+---
+
+<footer class="container mt-20 border-t border-[var(--color-line)] py-8 text-sm text-[var(--color-muted)]">
+  <div class="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+    <p>© {year} {site.author}. 用文字和小项目慢慢整理生活。</p>
+    <a href="/rss.xml">RSS</a>
+  </div>
+</footer>
