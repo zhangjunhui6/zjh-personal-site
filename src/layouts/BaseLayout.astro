@@ -7,14 +7,16 @@ import '@/styles/global.css';
 interface Props {
   title?: string;
   description?: string;
+  lang?: string;
 }
 
 const title = Astro.props.title ? `${Astro.props.title} · ${site.name}` : site.title;
 const description = Astro.props.description ?? site.description;
+const lang = Astro.props.lang ?? 'zh-CN';
 ---
 
 <!doctype html>
-<html lang="zh-CN">
+<html lang={lang}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />

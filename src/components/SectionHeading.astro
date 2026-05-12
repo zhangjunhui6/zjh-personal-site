@@ -13,5 +13,5 @@ const { eyebrow, title, href } = Astro.props;
     {eyebrow && <p class="mb-2 text-xs font-semibold uppercase text-[var(--color-clay)]">{eyebrow}</p>}
     <h2 class="m-0 text-2xl font-semibold md:text-3xl">{title}</h2>
   </div>
-  {href && <a class="text-sm text-[var(--color-muted)]" href={href}>查看全部</a>}
+  {href && <a class="text-sm text-[var(--color-muted)]" href={href} aria-label={`查看全部：${title}`}>查看全部</a>}
 </div>

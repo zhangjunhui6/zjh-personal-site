@@ -15,7 +15,7 @@ const { title, description, date, tags = [] } = Astro.props;
 <BaseLayout title={title} description={description}>
   <article class="container py-12">
     <header class="mb-10 max-w-3xl">
-      <p class="mb-3 text-sm text-[var(--color-muted)]">{formatDate(date)}</p>
+      <time class="mb-3 block text-sm text-[var(--color-muted)]" datetime={date.toISOString()}>{formatDate(date)}</time>
       <h1 class="m-0 text-4xl font-semibold leading-tight md:text-5xl">{title}</h1>
       <p class="mt-5 text-lg leading-8 text-[var(--color-muted)]">{description}</p>
       {tags.length > 0 && (

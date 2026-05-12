@@ -9,18 +9,21 @@ const currentPath = Astro.url.pathname;
     {site.name}
   </a>
   <nav class="flex flex-wrap items-center justify-end gap-4 text-sm text-[var(--color-muted)]" aria-label="主导航">
-    {site.nav.map((item) => (
-      <a
-        class:list={[
-          'no-underline transition-colors',
-          currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href))
-            ? 'text-[var(--color-ink)]'
-            : 'hover:text-[var(--color-leaf)]',
-        ]}
-        href={item.href}
-      >
-        {item.label}
-      </a>
-    ))}
+    {site.nav.map((item) => {
+      const isActive = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href));
+
+      return (
+        <a
+          class:list={[
+            'no-underline transition-colors',
+            isActive ? 'text-[var(--color-ink)]' : 'hover:text-[var(--color-leaf)]',
+          ]}
+          href={item.href}
+          aria-current={isActive ? 'page' : undefined}
+        >
+          {item.label}
+        </a>
+      );
+    })}
   </nav>
 </header>
