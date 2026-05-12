@@ -64,7 +64,7 @@ https://zjh-personal-site.pages.dev/keystatic
 - `@astrojs/cloudflare`：线上 `/keystatic` 需要服务端 API，Cloudflare Pages 需要通过 adapter 提供运行时能力。
 - `astro@5.x`：`@keystatic/astro@5.0.6` 当前支持 Astro 2-5，第一版后台采用 Astro 5 兼容矩阵，而不是强行忽略 peer dependency。
 
-Astro 配置需要从纯静态站升级为 Cloudflare 可运行的形式。公共内容页仍保持预渲染，避免为了后台把整站变成动态渲染页面。后台和后台 API 由 Keystatic integration 挂载。
+Astro 配置需要从纯静态站升级为 Cloudflare 可运行的形式。实现时使用 Astro 5 的 `output: 'static'` 搭配 Cloudflare adapter；Astro 5 不再通过 `output: 'hybrid'` 表达混合渲染。公共内容页仍保持预渲染，避免为了后台把整站变成动态渲染页面。后台和后台 API 由 Keystatic integration 挂载，并由 Cloudflare Pages Functions 运行。
 
 Cloudflare Pages 配置预计保持：
 

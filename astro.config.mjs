@@ -10,7 +10,9 @@ import tailwindcss from '@tailwindcss/vite';
 export default defineConfig({
   site: 'https://zjh-personal-site.pages.dev',
   output: 'static',
-  adapter: cloudflare(),
+  adapter: cloudflare({
+    imageService: 'compile',
+  }),
   integrations: [mdx(), sitemap(), react(), markdoc(), keystatic()],
   vite: {
     plugins: [tailwindcss()],

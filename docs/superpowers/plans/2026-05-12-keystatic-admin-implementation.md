@@ -4,7 +4,7 @@
 
 **Goal:** Add a self-use Keystatic CMS at `/keystatic` so the site owner can edit existing Markdown content and publish through GitHub + Cloudflare Pages.
 
-**Architecture:** Add Keystatic as an Astro integration with three collections mapped to the existing `src/content/notes`, `src/content/journal`, and `src/content/projects` folders. Keep public site pages pre-rendered by using Astro hybrid output with the Cloudflare adapter, while Keystatic uses server routes. Support local storage for field smoke tests and GitHub storage for the deployed admin by switching on `KEYSTATIC_STORAGE`.
+**Architecture:** Add Keystatic as an Astro integration with three collections mapped to the existing `src/content/notes`, `src/content/journal`, and `src/content/projects` folders. Keep public site pages pre-rendered with Astro 5 `output: 'static'` and the Cloudflare adapter; the adapter still emits on-demand routes for `/keystatic/*` and `/api/*`. Support local storage for field smoke tests and GitHub storage for the deployed admin by switching on `KEYSTATIC_STORAGE`.
 
 **Tech Stack:** Astro 5, Keystatic, React integration for the admin UI, Cloudflare adapter, GitHub mode, existing Markdown content collections.
 
@@ -14,7 +14,7 @@
 
 - Modify `package.json`: add Keystatic, React, Markdoc, and Cloudflare adapter dependencies; align Astro-related packages to Astro 5 because `@keystatic/astro@5.0.6` supports Astro 2-5.
 - Modify `package-lock.json`: lock the new dependency tree after installation.
-- Modify `astro.config.mjs`: add React, Markdoc, Keystatic, Cloudflare adapter, and `output: 'hybrid'`.
+- Modify `astro.config.mjs`: add React, Markdoc, Keystatic, Cloudflare adapter, and Astro 5 `output: 'static'`.
 - Create `keystatic.config.ts`: define storage mode and the `notes`, `journal`, and `projects` collections.
 - Modify `.gitignore`: allow committing `.env.example`.
 - Create `.env.example`: document the non-secret variable names required locally and on Cloudflare.
@@ -310,8 +310,10 @@ import tailwindcss from '@tailwindcss/vite';
 
 export default defineConfig({
   site: 'https://zjh-personal-site.pages.dev',
-  output: 'hybrid',
-  adapter: cloudflare(),
+  output: 'static',
+  adapter: cloudflare({
+    imageService: 'compile',
+  }),
   integrations: [mdx(), sitemap(), react(), markdoc(), keystatic()],
   vite: {
     plugins: [tailwindcss()],
@@ -333,6 +335,7 @@ Expected:
 - Build completes.
 - `dist/` contains the public site output.
 - The Cloudflare adapter output is generated without crashing.
+- The build does not warn about Sharp image service support at runtime.
 
 - [ ] **Step 3: Confirm public files still exist**
 
@@ -353,6 +356,8 @@ dist/journal/index.html
 dist/projects/index.html
 dist/rss.xml
 dist/sitemap-index.xml
+dist/_worker.js/index.js
+dist/_routes.json
 ```
 
 - [ ] **Step 4: Confirm Vite pin**
@@ -743,5 +748,5 @@ Expected: local branch can be fast-forwarded to any content commits created by K
 - Keystatic Markdoc `.md` extension: `https://keystatic.com/docs/fields/markdoc`
 - Keystatic format options: `https://keystatic.com/docs/format-options`
 - Keystatic path organization: `https://keystatic.com/docs/content-organisation`
-- Astro on-demand rendering and hybrid/server modes: `https://docs.astro.build/en/guides/on-demand-rendering/`
+- Astro on-demand rendering and static output with adapters: `https://docs.astro.build/en/guides/on-demand-rendering/`
 - Astro Cloudflare adapter: `https://docs.astro.build/en/guides/integrations-guide/cloudflare/`

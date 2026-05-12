@@ -23,4 +23,6 @@ https://zjh-personal-site.pages.dev
 
 This URL is set in `site.url` in `src/config/site.ts` and `site` in `astro.config.mjs`.
 
-The project pins Vite to `7.3.3` because Astro `6.3.1` currently builds against Vite 7, while `@tailwindcss/vite` allows Vite 8. Keep the `vite` override until an Astro/Tailwind upgrade is verified with `npm run build`.
+The project currently uses Astro 5 and pins Vite to `6.4.2` because `@keystatic/astro@5.0.6` supports Astro 2-5. Keep the Vite override until an Astro/Keystatic/Tailwind upgrade is verified with `npm run build`.
+
+Astro uses `output: 'static'` with the Cloudflare adapter. Public content pages remain prerendered, while Keystatic admin and API routes are emitted as Cloudflare Pages Functions. The adapter sets `imageService: 'compile'` so prerendered pages can optimize images at build time without requiring Sharp in the Cloudflare runtime.
