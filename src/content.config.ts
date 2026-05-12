@@ -41,7 +41,7 @@ const projects = defineCollection({
       .array(
         z.object({
           label: z.string(),
-          href: z.url(),
+          href: z.string().url(),
         }),
       )
       .default([]),
