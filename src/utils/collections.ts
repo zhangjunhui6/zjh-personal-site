@@ -16,6 +16,18 @@ export function newestFirst<T extends DatedEntry>(entries: T[]): T[] {
   });
 }
 
+export function notesByPinnedThenNewest(entries: CollectionEntry<'notes'>[]): CollectionEntry<'notes'>[] {
+  return [...entries].sort((a, b) => {
+    const byPinned = Number(b.data.pinned === true) - Number(a.data.pinned === true);
+    if (byPinned !== 0) {
+      return byPinned;
+    }
+
+    const byDate = b.data.date.valueOf() - a.data.date.valueOf();
+    return byDate === 0 ? a.id.localeCompare(b.id) : byDate;
+  });
+}
+
 export function featuredProjects(entries: CollectionEntry<'projects'>[]): CollectionEntry<'projects'>[] {
   return newestFirst(entries.filter((entry) => entry.data.featured && isPublished(entry)));
 }
