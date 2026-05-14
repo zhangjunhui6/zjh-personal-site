@@ -1,6 +1,6 @@
 ---
-title: Git 是什么，以及日常开发怎么用好它
-description: 从 Git 的基本概念、常用命令到团队协作流程和效率工具，整理一份日常开发可复用的 Git 指南。
+title: 让每次修改都有来路：Git 的日常开发指南
+description: 从 Git 的基本概念、常用命令、checkout 习惯到团队协作和效率工具，整理一份日常开发可复用的 Git 指南。
 date: 2026-05-14
 tags: [Git, 开发流程, 工具]
 lang: zh
@@ -67,6 +67,16 @@ git pull --ff-only
 git switch -c feature/search-shortcut
 ```
 
+如果你更习惯 `checkout`，也完全没问题。很多团队和老项目文档里仍然大量使用它：
+
+```bash
+git checkout main
+git pull --ff-only
+git checkout -b feature/search-shortcut
+```
+
+`switch` 的好处是语义更单一：它只负责切分支；`checkout` 同时负责切分支和还原文件，所以能力更老练，也更容易在疲惫的时候误用。我的建议不是强行换掉肌肉记忆，而是记住这条边界：切分支可以继续用 `checkout`，丢弃文件改动前一定先看 `git status` 和 `git diff`。
+
 分支不是为了让历史变复杂，而是为了隔离正在进行的工作。一个任务一条分支，是最容易维护的起点。
 
 ## 常用命令和场景
@@ -129,16 +139,23 @@ git add -p
 
 ### 分支切换和协作
 
-创建任务分支：
+创建任务分支，可以用更明确的 `switch`：
 
 ```bash
 git switch -c feature/git-guide
 ```
 
-切回已有分支：
+也可以用你更常用的 `checkout`：
+
+```bash
+git checkout -b feature/git-guide
+```
+
+切回已有分支同理：
 
 ```bash
 git switch main
+git checkout main
 ```
 
 查看本地分支：
@@ -248,6 +265,14 @@ git restore --staged src/pages/search.astro
 git restore src/pages/search.astro
 ```
 
+如果你还在用 `checkout`，对应的旧写法是：
+
+```bash
+git checkout -- src/pages/search.astro
+```
+
+这条命令会丢掉该文件未提交的本地改动。它很好用，也很锋利；如果只是取消暂存，不要用它。
+
 撤销已经提交并公开的改动：
 
 ```bash
@@ -304,6 +329,21 @@ change code
 
 如果团队使用 Conventional Commits，可以把 `feat`、`fix`、`docs`、`test`、`chore` 这类前缀固定下来。重点不在格式本身，而在让历史可以被快速扫描。
 
+可以直接参考这份规范：[约定式提交 1.0.0](https://www.conventionalcommits.org/zh-hans/v1.0.0/)。它给出的基本结构是：
+
+```text
+<type>[optional scope]: <description>
+```
+
+日常先掌握这几个类型就够了：
+
+- `feat`：新增能力。
+- `fix`：修复问题。
+- `docs`：文档或内容。
+- `test`：测试。
+- `refactor`：不改变行为的重构。
+- `chore`：构建、依赖、脚手架等维护工作。
+
 ### 提 PR 前自己先走一遍
 
 我的习惯是至少检查四件事：
@@ -352,10 +392,10 @@ git log --oneline --left-right --graph HEAD...origin/main
 下面是一套足够通用的工作流，适合多数小团队和个人项目：
 
 ```bash
-git switch main
+git checkout main
 git pull --ff-only
 
-git switch -c feature/git-guide
+git checkout -b feature/git-guide
 
 # 写代码或内容
 git status
@@ -400,6 +440,28 @@ gh pr view --web
 
 它适合已经习惯命令行的人。写完代码后不用离开终端，就能创建 PR、看检查状态、打开 review 页面。
 
+### 命令缩写和 shell 插件
+
+如果你经常敲 Git 命令，最实用的效率提升反而不是复杂 GUI，而是一组稳定缩写。比如 oh-my-zsh 的 `git` plugin 就内置了很多常见别名：
+
+```text
+gst     git status
+gss     git status --short
+gaa     git add --all
+gapa    git add --patch
+gco     git checkout
+gcb     git checkout -b
+gcmsg   git commit --message
+gd      git diff
+gds     git diff --staged
+gl      git pull
+gp      git push
+grbi    git rebase --interactive
+gstp    git stash pop
+```
+
+缩写的价值不是炫技，而是降低高频动作的摩擦。我的建议是先只记 5 个：`gst`、`gco`、`gcb`、`gcmsg`、`gp`。等它们真的进了手指，再慢慢加 `gapa`、`grbi` 这种更进阶的命令。
+
 ### GUI 客户端：GitHub Desktop、Fork、Sourcetree
 
 GUI 客户端适合三类场景：
@@ -438,6 +500,9 @@ GitHub Desktop 更轻，适合 GitHub 项目和基础协作；Fork 的 diff、re
 - [Git Reference](https://git-scm.com/docs)
 - [GitHub Docs: About Git](https://docs.github.com/en/get-started/using-git/about-git)
 - [Atlassian Git Tutorials](https://www.atlassian.com/git/tutorials)
+- [git-checkout Documentation](https://git-scm.com/docs/git-checkout)
+- [约定式提交 1.0.0](https://www.conventionalcommits.org/zh-hans/v1.0.0/)
+- [oh-my-zsh git plugin aliases](https://github.com/ohmyzsh/ohmyzsh/tree/master/plugins/git)
 - [GitHub CLI Manual](https://cli.github.com/manual/)
 - [GitLens on Visual Studio Marketplace](https://marketplace.visualstudio.com/items?itemName=eamodio.gitlens)
 - [lazygit](https://github.com/jesseduffield/lazygit)
