@@ -45,4 +45,29 @@ describe('search entrypoints', () => {
     assert.match(styles, /\.prose ol ol\s*{[^}]*list-style-type:\s*lower-alpha/s);
     assert.match(styles, /\.prose li > p\s*{[^}]*margin:\s*0\.45em 0/s);
   });
+
+  it('renders a table of contents from markdown headings on content detail pages', async () => {
+    const [layout, toc, notesPage, journalPage, projectsPage, styles] = await Promise.all([
+      source('src/layouts/ContentLayout.astro'),
+      source('src/components/TableOfContents.astro'),
+      source('src/pages/notes/[...slug].astro'),
+      source('src/pages/journal/[...slug].astro'),
+      source('src/pages/projects/[...slug].astro'),
+      source('src/styles/global.css'),
+    ]);
+
+    assert.match(layout, /TableOfContents/);
+    assert.match(layout, /headings\?:/);
+    assert.match(layout, /<TableOfContents headings=\{visibleHeadings\}/);
+    assert.match(toc, /aria-label="文章目录"/);
+    assert.match(toc, /href=\{`#\$\{heading\.slug\}`\}/);
+    assert.match(toc, /toc-link-depth-\$\{heading\.depth\}/);
+    assert.match(notesPage, /const \{ Content, headings \} = await render\(entry\);/);
+    assert.match(journalPage, /const \{ Content, headings \} = await render\(entry\);/);
+    assert.match(projectsPage, /const \{ Content, headings \} = await render\(entry\);/);
+    assert.match(styles, /\.content-shell/);
+    assert.match(styles, /\.toc-panel/);
+    assert.match(styles, /position:\s*sticky/);
+    assert.match(styles, /@media \(max-width:\s*1023px\)/);
+  });
 });

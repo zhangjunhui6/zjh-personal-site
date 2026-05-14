@@ -48,6 +48,71 @@ a:hover {
   margin-inline: auto;
 }
 
+.content-shell {
+  max-width: 760px;
+}
+
+.content-shell-with-toc {
+  display: grid;
+  max-width: 1080px;
+  grid-template-columns: minmax(0, 760px) minmax(190px, 240px);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.content-main {
+  min-width: 0;
+}
+
+.toc-panel {
+  position: sticky;
+  top: 5.5rem;
+  max-height: calc(100vh - 7rem);
+  overflow-y: auto;
+  border-left: 1px solid var(--color-line);
+  padding-left: 1rem;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.toc-title {
+  margin: 0 0 0.75rem;
+  color: var(--color-ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.toc-list {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.toc-item {
+  min-width: 0;
+}
+
+.toc-link {
+  display: block;
+  overflow: hidden;
+  color: inherit;
+  line-height: 1.5;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  transition: color 160ms ease;
+}
+
+.toc-link:hover {
+  color: var(--color-leaf);
+}
+
+.toc-link-depth-3 {
+  padding-left: 0.8rem;
+  font-size: 0.82rem;
+}
+
 .prose {
   max-width: 760px;
   font-size: 1rem;
@@ -200,4 +265,27 @@ a:hover {
   border-color: var(--color-leaf);
   background: rgba(47, 93, 80, 0.08);
   color: var(--color-ink);
+}
+
+@media (max-width: 1023px) {
+  .content-shell-with-toc {
+    display: flex;
+    max-width: 760px;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .toc-panel {
+    position: static;
+    order: -1;
+    max-height: none;
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    background: rgba(255, 253, 248, 0.72);
+    padding: 0.9rem 1rem;
+  }
+
+  .toc-list {
+    gap: 0.35rem;
+  }
 }

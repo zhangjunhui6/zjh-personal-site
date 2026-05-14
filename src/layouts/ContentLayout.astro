@@ -1,7 +1,14 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import TableOfContents from '@/components/TableOfContents.astro';
 import { formatDate } from '@/utils/dates';
 import { tagHref } from '@/utils/taxonomy';
+
+interface Heading {
+  depth: number;
+  slug: string;
+  text: string;
+}
 
 interface Props {
   title: string;
@@ -9,10 +16,13 @@ interface Props {
   date: Date;
   updated?: Date;
   tags?: string[];
+  headings?: Heading[];
 }
 
-const { title, description, date, updated, tags = [] } = Astro.props;
+const { title, description, date, updated, tags = [], headings = [] } = Astro.props;
 const visibleTags = tags.map((tag) => tag.trim()).filter(Boolean);
+const visibleHeadings = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3 && heading.slug && heading.text);
+const showTableOfContents = visibleHeadings.length >= 2;
 ---
 
 <BaseLayout title={title} description={description}>
@@ -37,8 +47,13 @@ const visibleTags = tags.map((tag) => tag.trim()).filter(Boolean);
         </div>
       )}
     </header>
-    <div class="prose">
-      <slot />
+    <div class:list={['content-shell', showTableOfContents && 'content-shell-with-toc']}>
+      <div class="content-main">
+        <div class="prose">
+          <slot />
+        </div>
+      </div>
+      {showTableOfContents && <TableOfContents headings={visibleHeadings} />}
     </div>
   </article>
 </BaseLayout>
