@@ -12,38 +12,51 @@ const filters = [
 <BaseLayout title="搜索" description="搜索记录、生活和项目内容。">
   <section class="container py-12" data-search-root>
     <h1 class="mb-4 text-4xl font-semibold">搜索</h1>
-    <p class="mb-8 max-w-2xl leading-8 text-[var(--color-muted)]">从标题、标签和正文里找到已经写下来的线索。</p>
+    <p class="mb-6 max-w-2xl leading-8 text-[var(--color-muted)]">从标题、标签和正文里找到已经写下来的线索。</p>
 
-    <form class="max-w-3xl" role="search" data-search-form>
-      <label class="sr-only" for="site-search-input">搜索关键词</label>
-      <input
-        id="site-search-input"
-        class="w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 text-base text-[var(--color-ink)] outline-none transition-colors placeholder:text-[var(--color-muted)] focus:border-[var(--color-leaf)]"
-        type="search"
-        name="q"
-        placeholder="搜索标题、标签、正文"
-        autocomplete="off"
-        data-search-input
-      />
-    </form>
+    <div class="max-w-3xl rounded-lg border border-[var(--color-line)] bg-[rgba(255,253,248,0.86)] p-4 shadow-[0_18px_48px_rgba(78,68,52,0.08)] backdrop-blur sm:p-5">
+      <form class="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]" role="search" data-search-form>
+        <label class="sr-only" for="site-search-input">搜索关键词</label>
+        <div class="relative">
+          <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-lg text-[var(--color-muted)]" aria-hidden="true">⌕</span>
+          <input
+            id="site-search-input"
+            class="min-h-12 w-full rounded-md border border-[var(--color-line)] bg-[var(--color-surface)] px-4 pl-10 text-base text-[var(--color-ink)] outline-none transition-colors placeholder:text-[rgba(104,117,111,0.82)] focus:border-[var(--color-leaf)] focus:ring-2 focus:ring-[rgba(47,93,80,0.16)]"
+            type="search"
+            name="q"
+            placeholder="搜索标题、标签、正文"
+            autocomplete="off"
+            data-search-input
+          />
+        </div>
+        <button
+          class="inline-flex min-h-12 items-center justify-center gap-2 rounded-md border border-[var(--color-leaf)] bg-[var(--color-leaf)] px-5 text-sm font-semibold text-white transition hover:border-[var(--color-ink)] hover:bg-[var(--color-ink)] focus:outline-none focus:ring-2 focus:ring-[rgba(47,93,80,0.18)] sm:min-w-24"
+          type="submit"
+        >
+          <span aria-hidden="true">↵</span>
+          <span>搜索</span>
+        </button>
+      </form>
 
-    <div class="mt-4 flex flex-wrap gap-2" role="group" aria-label="内容类型">
-      {
-        filters.map((filter) => (
-          <button
-            class="search-filter rounded-full border border-[var(--color-line)] px-3 py-1 text-sm text-[var(--color-muted)] transition-colors hover:border-[var(--color-leaf)] hover:text-[var(--color-leaf)]"
-            type="button"
-            data-search-filter={filter.value}
-            aria-pressed={filter.value === 'all' ? 'true' : 'false'}
-          >
-            {filter.label}
-          </button>
-        ))
-      }
+      <div class="mt-4 flex flex-wrap items-center gap-2" role="group" aria-label="内容类型">
+        <span class="mr-1 text-xs font-semibold uppercase text-[var(--color-clay)]">范围</span>
+        {
+          filters.map((filter) => (
+            <button
+              class="search-filter rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] px-3 py-1 text-sm text-[var(--color-muted)] transition-colors hover:border-[var(--color-leaf)] hover:text-[var(--color-leaf)]"
+              type="button"
+              data-search-filter={filter.value}
+              aria-pressed={filter.value === 'all' ? 'true' : 'false'}
+            >
+              {filter.label}
+            </button>
+          ))
+        }
+      </div>
     </div>
 
     <p class="mt-6 min-h-6 text-sm text-[var(--color-muted)]" aria-live="polite" data-search-status></p>
-    <div class="mt-6 rounded-lg border border-dashed border-[var(--color-line)] px-5 py-8 text-[var(--color-muted)]" data-search-empty>
+    <div class="mt-6 max-w-3xl rounded-lg border border-dashed border-[var(--color-line)] bg-[rgba(255,253,248,0.56)] px-5 py-8 text-[var(--color-muted)]" data-search-empty>
       等待关键词
     </div>
     <div class="mt-6 grid gap-4 md:grid-cols-2" data-search-results></div>

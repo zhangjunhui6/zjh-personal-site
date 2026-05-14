@@ -61,8 +61,84 @@ a:hover {
   letter-spacing: 0;
 }
 
+.prose h2 {
+  margin: 2.2em 0 0.75em;
+  padding-top: 0.2em;
+  font-size: 1.7rem;
+}
+
+.prose h3 {
+  margin: 1.8em 0 0.65em;
+  font-size: 1.28rem;
+}
+
 .prose p {
   margin: 1.1em 0;
+}
+
+.prose a {
+  color: var(--color-leaf);
+  font-weight: 600;
+}
+
+.prose ul,
+.prose ol {
+  margin: 1.1em 0;
+  padding-left: 1.4em;
+}
+
+.prose li {
+  margin: 0.45em 0;
+  padding-left: 0.15em;
+}
+
+.prose code {
+  border: 1px solid rgba(47, 93, 80, 0.12);
+  border-radius: 5px;
+  background: rgba(220, 233, 239, 0.48);
+  padding: 0.12em 0.34em;
+  color: var(--color-ink);
+  font-family: "SFMono-Regular", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.prose pre {
+  max-width: 100%;
+  margin: 1.35em 0;
+  border: 1px solid rgba(31, 42, 36, 0.18);
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 16px 42px rgba(31, 42, 36, 0.12);
+  line-height: 1.65;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose pre code {
+  display: block;
+  min-width: max-content;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: 0.9rem;
+  line-height: inherit;
+  overflow-wrap: normal;
+  white-space: pre;
+  word-break: normal;
+}
+
+.prose pre code span {
+  font-family: inherit;
+}
+
+.prose blockquote {
+  margin: 1.5em 0;
+  border-left: 3px solid var(--color-leaf);
+  padding: 0.2em 0 0.2em 1em;
+  color: var(--color-muted);
 }
 
 .quiet-card {

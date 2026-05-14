@@ -12,6 +12,8 @@ describe('search entrypoints', () => {
     assert.match(component, /method="get"/);
     assert.match(component, /name="q"/);
     assert.match(component, /name="type"/);
+    assert.match(component, /回车直接查看结果/);
+    assert.match(component, /⌕/);
   });
 
   it('shows search shortcuts on the homepage and content directories', async () => {
@@ -26,5 +28,15 @@ describe('search entrypoints', () => {
     assert.match(notes, /collection="notes"/);
     assert.match(journal, /collection="journal"/);
     assert.match(projects, /collection="projects"/);
+  });
+
+  it('keeps technical article code blocks readable in the prose layer', async () => {
+    const styles = await source('src/styles/global.css');
+
+    assert.match(styles, /\.prose pre/);
+    assert.match(styles, /overflow-x:\s*auto/);
+    assert.match(styles, /\.prose pre code/);
+    assert.match(styles, /white-space:\s*pre/);
+    assert.match(styles, /font-family:\s*"SFMono-Regular"/);
   });
 });
