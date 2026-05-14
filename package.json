@@ -7,7 +7,9 @@
     "dev": "astro dev",
     "build": "astro check && astro build",
     "preview": "astro preview",
-    "check": "astro check"
+    "check": "astro check",
+    "test": "npm run test:collections",
+    "test:collections": "node --experimental-strip-types --test tests/collections.test.mjs"
   },
   "engines": {
     "node": ">=22.12.0"
