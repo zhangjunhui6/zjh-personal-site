@@ -48,10 +48,83 @@ a:hover {
   margin-inline: auto;
 }
 
+.content-shell {
+  max-width: 760px;
+}
+
+.content-shell-with-toc {
+  display: grid;
+  max-width: 1080px;
+  grid-template-columns: minmax(0, 760px) minmax(190px, 240px);
+  gap: clamp(2rem, 5vw, 4rem);
+  align-items: start;
+}
+
+.content-main {
+  min-width: 0;
+}
+
+.toc-panel {
+  position: sticky;
+  top: 5.5rem;
+  max-height: calc(100vh - 7rem);
+  overflow-y: auto;
+  border-left: 1px solid var(--color-line);
+  padding-left: 1rem;
+  color: var(--color-muted);
+  font-size: 0.875rem;
+}
+
+.toc-title {
+  margin: 0 0 0.75rem;
+  color: var(--color-ink);
+  font-size: 0.78rem;
+  font-weight: 700;
+}
+
+.toc-list {
+  display: grid;
+  gap: 0.45rem;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.toc-item {
+  min-width: 0;
+}
+
+.toc-link {
+  display: block;
+  overflow: hidden;
+  color: inherit;
+  line-height: 1.5;
+  text-decoration: none;
+  text-overflow: ellipsis;
+  transition: color 160ms ease;
+}
+
+.toc-link:hover {
+  color: var(--color-leaf);
+}
+
+.toc-link-depth-3 {
+  padding-left: 0.8rem;
+  font-size: 0.82rem;
+}
+
 .prose {
-  max-width: 720px;
-  font-size: 1.05rem;
-  line-height: 1.9;
+  max-width: 760px;
+  font-size: 1rem;
+  line-height: 1.78;
+}
+
+.prose > :first-child {
+  margin-top: 0;
+}
+
+.prose > :last-child {
+  margin-bottom: 0;
 }
 
 .prose h1,
@@ -61,8 +134,124 @@ a:hover {
   letter-spacing: 0;
 }
 
+.prose h2 {
+  margin: 2.4em 0 0.8em;
+  border-bottom: 1px solid var(--color-line);
+  padding-bottom: 0.3em;
+  font-size: 1.55rem;
+}
+
+.prose h3 {
+  margin: 1.8em 0 0.65em;
+  font-size: 1.18rem;
+}
+
 .prose p {
-  margin: 1.1em 0;
+  margin: 1em 0;
+}
+
+.prose a {
+  color: var(--color-leaf);
+  font-weight: 600;
+}
+
+.prose ul,
+.prose ol {
+  margin: 1em 0;
+  padding-left: 1.65em;
+  list-style-position: outside;
+}
+
+.prose ul {
+  list-style-type: disc;
+}
+
+.prose ul ul {
+  list-style-type: circle;
+}
+
+.prose ul ul ul {
+  list-style-type: square;
+}
+
+.prose ol {
+  list-style-type: decimal;
+}
+
+.prose ol ol {
+  list-style-type: lower-alpha;
+}
+
+.prose ol ol ol {
+  list-style-type: lower-roman;
+}
+
+.prose li::marker {
+  color: var(--color-muted);
+  font-weight: 600;
+}
+
+.prose li {
+  margin: 0.35em 0;
+  padding-left: 0.2em;
+}
+
+.prose li > p {
+  margin: 0.45em 0;
+}
+
+.prose li > ul,
+.prose li > ol {
+  margin: 0.45em 0 0.65em;
+}
+
+.prose code {
+  border: 1px solid rgba(47, 93, 80, 0.12);
+  border-radius: 5px;
+  background: rgba(220, 233, 239, 0.48);
+  padding: 0.12em 0.34em;
+  color: var(--color-ink);
+  font-family: "SFMono-Regular", "Cascadia Code", "JetBrains Mono", Menlo, Consolas, monospace;
+  font-size: 0.88em;
+  line-height: 1.55;
+  overflow-wrap: anywhere;
+}
+
+.prose pre {
+  max-width: 100%;
+  margin: 1.25em 0;
+  border: 1px solid rgba(31, 42, 36, 0.18);
+  border-radius: 8px;
+  padding: 1rem;
+  box-shadow: 0 14px 34px rgba(31, 42, 36, 0.1);
+  line-height: 1.6;
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+.prose pre code {
+  display: block;
+  min-width: max-content;
+  border: 0;
+  background: transparent;
+  padding: 0;
+  color: inherit;
+  font-size: 0.9rem;
+  line-height: inherit;
+  overflow-wrap: normal;
+  white-space: pre;
+  word-break: normal;
+}
+
+.prose pre code span {
+  font-family: inherit;
+}
+
+.prose blockquote {
+  margin: 1.5em 0;
+  border-left: 3px solid var(--color-leaf);
+  padding: 0.2em 0 0.2em 1em;
+  color: var(--color-muted);
 }
 
 .quiet-card {
@@ -76,4 +265,27 @@ a:hover {
   border-color: var(--color-leaf);
   background: rgba(47, 93, 80, 0.08);
   color: var(--color-ink);
+}
+
+@media (max-width: 1023px) {
+  .content-shell-with-toc {
+    display: flex;
+    max-width: 760px;
+    flex-direction: column;
+    gap: 1.5rem;
+  }
+
+  .toc-panel {
+    position: static;
+    order: -1;
+    max-height: none;
+    border: 1px solid var(--color-line);
+    border-radius: 8px;
+    background: rgba(255, 253, 248, 0.72);
+    padding: 0.9rem 1rem;
+  }
+
+  .toc-list {
+    gap: 0.35rem;
+  }
 }
