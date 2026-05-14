@@ -1,0 +1,36 @@
+---
+interface Props {
+  label?: string;
+  placeholder?: string;
+  collection?: 'notes' | 'journal' | 'projects';
+  class?: string;
+}
+
+const {
+  label = '搜索全站内容',
+  placeholder = '搜索标题、标签、正文',
+  collection,
+  class: className = '',
+} = Astro.props;
+const inputId = collection ? `${collection}-search-shortcut` : 'site-search-shortcut';
+---
+
+<form action="/search/" method="get" role="search" class:list={['search-shortcut', className]}>
+  <label class="mb-2 block text-sm font-semibold text-[var(--color-ink)]" for={inputId}>{label}</label>
+  <div class="flex flex-col gap-2 sm:flex-row">
+    <input
+      id={inputId}
+      name="q"
+      type="search"
+      placeholder={placeholder}
+      class="min-h-11 w-full rounded border border-[var(--color-line)] bg-[var(--color-surface)] px-4 text-base text-[var(--color-ink)] outline-none transition focus:border-[var(--color-leaf)] focus:ring-2 focus:ring-[rgba(47,93,80,0.14)]"
+    />
+    <input name="type" type="hidden" value={collection ?? 'all'} />
+    <button
+      type="submit"
+      class="min-h-11 rounded border border-[var(--color-leaf)] bg-[var(--color-leaf)] px-5 text-sm font-semibold text-white transition hover:bg-[var(--color-ink)]"
+    >
+      搜索
+    </button>
+  </div>
+</form>

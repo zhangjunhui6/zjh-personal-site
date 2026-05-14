@@ -8,10 +8,11 @@
     "build": "astro check && astro build",
     "preview": "astro preview",
     "check": "astro check",
-    "test": "node --experimental-strip-types --test tests/collections.test.mjs && node --experimental-strip-types --test tests/taxonomy.test.mjs && node --experimental-strip-types --test tests/search.test.mjs && node --test tests/ci-workflow.test.mjs",
+    "test": "node --experimental-strip-types --test tests/collections.test.mjs && node --experimental-strip-types --test tests/taxonomy.test.mjs && node --experimental-strip-types --test tests/search.test.mjs && node --test tests/search-entrypoints.test.mjs && node --test tests/ci-workflow.test.mjs",
     "test:collections": "node --experimental-strip-types --test tests/collections.test.mjs",
     "test:taxonomy": "node --experimental-strip-types --test tests/taxonomy.test.mjs",
     "test:search": "node --experimental-strip-types --test tests/search.test.mjs",
+    "test:search-entrypoints": "node --test tests/search-entrypoints.test.mjs",
     "test:ci": "node --test tests/ci-workflow.test.mjs"
   },
   "engines": {

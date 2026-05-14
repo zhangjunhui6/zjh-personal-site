@@ -1,6 +1,7 @@
 ---
 import { getCollection } from 'astro:content';
 import ContentCard from '@/components/ContentCard.astro';
+import SearchShortcut from '@/components/SearchShortcut.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { isPublished, notesByPinnedThenNewest } from '@/utils/collections';
 
@@ -10,7 +11,8 @@ const notes = notesByPinnedThenNewest((await getCollection('notes')).filter(isPu
 <BaseLayout title="记录" description="文章、技术笔记、读书想法和长期思考。">
   <section class="container py-12">
     <h1 class="mb-4 text-4xl font-semibold">记录</h1>
-    <p class="mb-8 max-w-2xl leading-8 text-[var(--color-muted)]">文章、技术笔记、读书想法和一些还在形成中的问题。</p>
+    <p class="mb-6 max-w-2xl leading-8 text-[var(--color-muted)]">文章、技术笔记、读书想法和一些还在形成中的问题。</p>
+    <SearchShortcut class="mb-8 max-w-2xl" label="搜索记录" placeholder="搜索记录标题、标签、正文" collection="notes" />
     <div class="grid gap-4 md:grid-cols-2">
       {notes.map((entry) => (
         <ContentCard title={entry.data.title} description={entry.data.description} date={entry.data.date} href={`/notes/${entry.id}/`} />
