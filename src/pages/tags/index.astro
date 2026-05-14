@@ -1,0 +1,35 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { isPublished } from '@/utils/collections';
+import { collectTagSummaries, toTaggedContentItems } from '@/utils/taxonomy';
+
+const notes = (await getCollection('notes')).filter(isPublished);
+const journal = (await getCollection('journal')).filter(isPublished);
+const tags = collectTagSummaries(toTaggedContentItems(notes, journal));
+---
+
+<BaseLayout title="标签" description="按主题浏览记录和生活内容。">
+  <section class="container py-12">
+    <h1 class="mb-4 text-4xl font-semibold">标签</h1>
+    <p class="mb-8 max-w-2xl leading-8 text-[var(--color-muted)]">按主题串起记录和生活片段，从同一个问题或兴趣继续往下读。</p>
+
+    {
+      tags.length > 0 ? (
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {tags.map((tag) => (
+            <a
+              class="quiet-card flex items-center justify-between gap-4 px-4 py-3 no-underline transition-colors hover:border-[var(--color-leaf)]"
+              href={tag.href}
+            >
+              <span class="font-medium">{tag.tag}</span>
+              <span class="shrink-0 text-sm text-[var(--color-muted)]">{tag.count} 篇</span>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="leading-8 text-[var(--color-muted)]">还没有可浏览的标签。</p>
+      )
+    }
+  </section>
+</BaseLayout>

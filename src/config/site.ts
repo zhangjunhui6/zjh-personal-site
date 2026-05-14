@@ -11,6 +11,7 @@ export const site = {
     { label: '记录', href: '/notes/' },
     { label: '生活', href: '/journal/' },
     { label: '项目', href: '/projects/' },
+    { label: '归档', href: '/archive/' },
     { label: '关于', href: '/about/' },
   ],
 };
