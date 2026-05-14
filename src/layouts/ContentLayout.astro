@@ -1,6 +1,7 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { formatDate } from '@/utils/dates';
+import { tagHref } from '@/utils/taxonomy';
 
 interface Props {
   title: string;
@@ -11,6 +12,7 @@ interface Props {
 }
 
 const { title, description, date, updated, tags = [] } = Astro.props;
+const visibleTags = tags.map((tag) => tag.trim()).filter(Boolean);
 ---
 
 <BaseLayout title={title} description={description}>
@@ -22,9 +24,16 @@ const { title, description, date, updated, tags = [] } = Astro.props;
       )}
       <h1 class="m-0 text-4xl font-semibold leading-tight md:text-5xl">{title}</h1>
       <p class="mt-5 text-lg leading-8 text-[var(--color-muted)]">{description}</p>
-      {tags.length > 0 && (
+      {visibleTags.length > 0 && (
         <div class="mt-6 flex flex-wrap gap-2">
-          {tags.map((tag) => <span class="rounded-full border border-[var(--color-line)] px-3 py-1 text-xs text-[var(--color-muted)]">{tag}</span>)}
+          {visibleTags.map((tag) => (
+            <a
+              class="rounded-full border border-[var(--color-line)] px-3 py-1 text-xs text-[var(--color-muted)] no-underline transition-colors hover:border-[var(--color-leaf)] hover:text-[var(--color-leaf)]"
+              href={tagHref(tag)}
+            >
+              {tag}
+            </a>
+          ))}
         </div>
       )}
     </header>

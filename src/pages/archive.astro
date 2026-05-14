@@ -1,0 +1,48 @@
+---
+import { getCollection } from 'astro:content';
+import ContentCard from '@/components/ContentCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { isPublished } from '@/utils/collections';
+import { groupItemsByYear, toTaggedContentItems } from '@/utils/taxonomy';
+
+const notes = (await getCollection('notes')).filter(isPublished);
+const journal = (await getCollection('journal')).filter(isPublished);
+const groups = groupItemsByYear(toTaggedContentItems(notes, journal));
+---
+
+<BaseLayout title="归档" description="按年份浏览记录和生活内容。">
+  <section class="container py-12">
+    <h1 class="mb-4 text-4xl font-semibold">归档</h1>
+    <p class="mb-10 max-w-2xl leading-8 text-[var(--color-muted)]">按时间回看所有公开的记录和生活内容。</p>
+
+    {
+      groups.length > 0 ? (
+        <div class="space-y-12">
+          {groups.map((group) => (
+            <section aria-labelledby={`archive-${group.year}`}>
+              <div class="mb-4 flex items-baseline justify-between gap-4 border-b border-[var(--color-line)] pb-3">
+                <h2 id={`archive-${group.year}`} class="m-0 text-2xl font-semibold">
+                  {group.year}
+                </h2>
+                <p class="m-0 text-sm text-[var(--color-muted)]">{group.entries.length} 篇</p>
+              </div>
+              <div class="grid gap-4 md:grid-cols-2">
+                {group.entries.map((entry) => (
+                  <ContentCard
+                    title={entry.title}
+                    description={entry.description}
+                    date={entry.date}
+                    href={entry.href}
+                    label={entry.label}
+                  />
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      ) : (
+        <p class="leading-8 text-[var(--color-muted)]">还没有可归档的公开内容。</p>
+      )
+    }
+  </section>
+</BaseLayout>

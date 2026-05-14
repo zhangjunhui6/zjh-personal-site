@@ -32,8 +32,8 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Run collection tests
-        run: npm run test:collections
+      - name: Run tests
+        run: npm test
 
       - name: Run Astro check
         run: npm run check
