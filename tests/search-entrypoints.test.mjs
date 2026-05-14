@@ -30,7 +30,7 @@ describe('search entrypoints', () => {
     assert.match(projects, /collection="projects"/);
   });
 
-  it('keeps technical article code blocks readable in the prose layer', async () => {
+  it('keeps technical article markdown structure readable in the prose layer', async () => {
     const styles = await source('src/styles/global.css');
 
     assert.match(styles, /\.prose pre/);
@@ -38,5 +38,11 @@ describe('search entrypoints', () => {
     assert.match(styles, /\.prose pre code/);
     assert.match(styles, /white-space:\s*pre/);
     assert.match(styles, /font-family:\s*"SFMono-Regular"/);
+    assert.match(styles, /\.prose ul\s*{[^}]*list-style-type:\s*disc/s);
+    assert.match(styles, /\.prose ol\s*{[^}]*list-style-type:\s*decimal/s);
+    assert.match(styles, /list-style-position:\s*outside/);
+    assert.match(styles, /\.prose ul ul\s*{[^}]*list-style-type:\s*circle/s);
+    assert.match(styles, /\.prose ol ol\s*{[^}]*list-style-type:\s*lower-alpha/s);
+    assert.match(styles, /\.prose li > p\s*{[^}]*margin:\s*0\.45em 0/s);
   });
 });
