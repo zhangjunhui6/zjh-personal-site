@@ -77,9 +77,15 @@ export default config({
       slugField: 'title',
       entryLayout: 'content',
       format: contentFormat,
+      columns: ['title', 'date', 'draft', 'pinned'],
       schema: {
         ...baseEntryFields,
         updated: fields.date({ label: 'Updated' }),
+        pinned: fields.checkbox({
+          label: 'Pinned',
+          defaultValue: false,
+        }),
+        cover: fields.text({ label: 'Cover' }),
       },
     }),
     journal: collection({
@@ -88,6 +94,7 @@ export default config({
       slugField: 'title',
       entryLayout: 'content',
       format: contentFormat,
+      columns: ['title', 'date', 'draft'],
       schema: {
         ...baseEntryFields,
         mood: fields.text({ label: 'Mood' }),
@@ -104,6 +111,7 @@ export default config({
       slugField: 'title',
       entryLayout: 'content',
       format: contentFormat,
+      columns: ['title', 'date', 'status', 'featured'],
       schema: {
         title: fields.slug({
           name: {

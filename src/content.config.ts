@@ -16,6 +16,8 @@ const notes = defineCollection({
   schema: z.object({
     ...baseEntry,
     updated: z.coerce.date().optional(),
+    pinned: z.boolean().default(false),
+    cover: z.string().optional(),
   }),
 });
 

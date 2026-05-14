@@ -2,9 +2,9 @@
 import { getCollection } from 'astro:content';
 import ContentCard from '@/components/ContentCard.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
-import { isPublished, newestFirst } from '@/utils/collections';
+import { isPublished, notesByPinnedThenNewest } from '@/utils/collections';
 
-const notes = newestFirst((await getCollection('notes')).filter(isPublished));
+const notes = notesByPinnedThenNewest((await getCollection('notes')).filter(isPublished));
 ---
 
 <BaseLayout title="记录" description="文章、技术笔记、读书想法和长期思考。">
