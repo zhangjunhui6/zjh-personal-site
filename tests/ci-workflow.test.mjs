@@ -8,10 +8,11 @@ describe('GitHub Actions CI workflow', () => {
 
     assert.equal(
       packageJson.scripts.test,
-      'node --experimental-strip-types --test tests/collections.test.mjs && node --experimental-strip-types --test tests/taxonomy.test.mjs && node --test tests/ci-workflow.test.mjs',
+      'node --experimental-strip-types --test tests/collections.test.mjs && node --experimental-strip-types --test tests/taxonomy.test.mjs && node --experimental-strip-types --test tests/search.test.mjs && node --test tests/ci-workflow.test.mjs',
     );
     assert.equal(packageJson.scripts['test:collections'], 'node --experimental-strip-types --test tests/collections.test.mjs');
     assert.equal(packageJson.scripts['test:taxonomy'], 'node --experimental-strip-types --test tests/taxonomy.test.mjs');
+    assert.equal(packageJson.scripts['test:search'], 'node --experimental-strip-types --test tests/search.test.mjs');
     assert.equal(packageJson.scripts['test:ci'], 'node --test tests/ci-workflow.test.mjs');
   });
 

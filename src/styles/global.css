@@ -71,3 +71,9 @@ a:hover {
   background: rgba(255, 253, 248, 0.78);
   box-shadow: 0 18px 48px rgba(78, 68, 52, 0.08);
 }
+
+.search-filter[aria-pressed='true'] {
+  border-color: var(--color-leaf);
+  background: rgba(47, 93, 80, 0.08);
+  color: var(--color-ink);
+}

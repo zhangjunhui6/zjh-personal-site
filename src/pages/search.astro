@@ -1,0 +1,205 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const filters = [
+  { label: '全部', value: 'all' },
+  { label: '记录', value: 'notes' },
+  { label: '生活', value: 'journal' },
+  { label: '项目', value: 'projects' },
+] as const;
+---
+
+<BaseLayout title="搜索" description="搜索记录、生活和项目内容。">
+  <section class="container py-12" data-search-root>
+    <h1 class="mb-4 text-4xl font-semibold">搜索</h1>
+    <p class="mb-8 max-w-2xl leading-8 text-[var(--color-muted)]">从标题、标签和正文里找到已经写下来的线索。</p>
+
+    <form class="max-w-3xl" role="search" data-search-form>
+      <label class="sr-only" for="site-search-input">搜索关键词</label>
+      <input
+        id="site-search-input"
+        class="w-full rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-4 py-3 text-base text-[var(--color-ink)] outline-none transition-colors placeholder:text-[var(--color-muted)] focus:border-[var(--color-leaf)]"
+        type="search"
+        name="q"
+        placeholder="搜索标题、标签、正文"
+        autocomplete="off"
+        data-search-input
+      />
+    </form>
+
+    <div class="mt-4 flex flex-wrap gap-2" role="group" aria-label="内容类型">
+      {
+        filters.map((filter) => (
+          <button
+            class="search-filter rounded-full border border-[var(--color-line)] px-3 py-1 text-sm text-[var(--color-muted)] transition-colors hover:border-[var(--color-leaf)] hover:text-[var(--color-leaf)]"
+            type="button"
+            data-search-filter={filter.value}
+            aria-pressed={filter.value === 'all' ? 'true' : 'false'}
+          >
+            {filter.label}
+          </button>
+        ))
+      }
+    </div>
+
+    <p class="mt-6 min-h-6 text-sm text-[var(--color-muted)]" aria-live="polite" data-search-status></p>
+    <div class="mt-6 rounded-lg border border-dashed border-[var(--color-line)] px-5 py-8 text-[var(--color-muted)]" data-search-empty>
+      等待关键词
+    </div>
+    <div class="mt-6 grid gap-4 md:grid-cols-2" data-search-results></div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { searchDocuments, type SearchDocument, type SearchFilter, type SearchResult } from '@/utils/search';
+
+  const root = document.querySelector<HTMLElement>('[data-search-root]');
+  const dateFormatter = new Intl.DateTimeFormat('zh-CN', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('[data-search-form]');
+    const input = root.querySelector<HTMLInputElement>('[data-search-input]');
+    const status = root.querySelector<HTMLElement>('[data-search-status]');
+    const empty = root.querySelector<HTMLElement>('[data-search-empty]');
+    const resultsContainer = root.querySelector<HTMLElement>('[data-search-results]');
+    const filterButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-search-filter]'));
+    const params = new URLSearchParams(window.location.search);
+    const initialFilter = toSearchFilter(params.get('type'));
+    let documents: SearchDocument[] = [];
+    let activeFilter: SearchFilter = initialFilter;
+
+    if (input && status && empty && resultsContainer) {
+      input.value = params.get('q') ?? '';
+      setActiveFilter(activeFilter);
+      render();
+
+      form?.addEventListener('submit', (event) => {
+        event.preventDefault();
+        render();
+      });
+
+      input.addEventListener('input', render);
+
+      filterButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          activeFilter = toSearchFilter(button.dataset.searchFilter);
+          setActiveFilter(activeFilter);
+          render();
+        });
+      });
+
+      fetch('/search.json')
+        .then((response) => {
+          if (!response.ok) throw new Error('Search index request failed.');
+          return response.json() as Promise<{ items: SearchDocument[] }>;
+        })
+        .then((payload) => {
+          documents = payload.items;
+          render();
+        })
+        .catch(() => {
+          status.textContent = '搜索索引暂时不可用';
+          empty.hidden = true;
+        });
+    }
+
+    function render() {
+      if (!input || !status || !empty || !resultsContainer) return;
+
+      const query = input.value;
+      const results = searchDocuments(documents, query, activeFilter);
+      syncUrl(query, activeFilter);
+      resultsContainer.replaceChildren();
+
+      if (!query.trim()) {
+        status.textContent = '';
+        empty.textContent = '等待关键词';
+        empty.hidden = false;
+        return;
+      }
+
+      if (results.length === 0) {
+        status.textContent = '0 条结果';
+        empty.textContent = '没有找到匹配内容';
+        empty.hidden = false;
+        return;
+      }
+
+      status.textContent = `${results.length} 条结果`;
+      empty.hidden = true;
+      results.forEach((result) => resultsContainer.append(createResultCard(result)));
+    }
+
+    function createResultCard(result: SearchResult): HTMLElement {
+      const article = document.createElement('article');
+      article.className = 'quiet-card p-5';
+
+      const label = document.createElement('p');
+      label.className = 'mb-3 text-xs font-semibold uppercase text-[var(--color-clay)]';
+      label.textContent = result.label;
+
+      const title = document.createElement('h3');
+      title.className = 'mb-3 mt-0 text-xl font-semibold';
+      const link = document.createElement('a');
+      link.className = 'no-underline';
+      link.href = result.href;
+      link.textContent = result.title;
+      title.append(link);
+
+      const excerpt = document.createElement('p');
+      excerpt.className = 'mb-4 leading-7 text-[var(--color-muted)]';
+      excerpt.textContent = result.excerpt;
+
+      const meta = document.createElement('div');
+      meta.className = 'flex flex-wrap items-center gap-2 text-sm text-[var(--color-muted)]';
+
+      const time = document.createElement('time');
+      time.dateTime = result.date;
+      time.textContent = dateFormatter.format(new Date(result.date));
+      meta.append(time);
+
+      result.tags.slice(0, 4).forEach((tag) => {
+        const tagChip = document.createElement('span');
+        tagChip.className = 'rounded-full border border-[var(--color-line)] px-2 py-0.5 text-xs';
+        tagChip.textContent = tag;
+        meta.append(tagChip);
+      });
+
+      article.append(label, title, excerpt, meta);
+      return article;
+    }
+
+    function setActiveFilter(filter: SearchFilter) {
+      filterButtons.forEach((button) => {
+        button.setAttribute('aria-pressed', String(button.dataset.searchFilter === filter));
+      });
+    }
+
+    function syncUrl(query: string, filter: SearchFilter) {
+      const url = new URL(window.location.href);
+      const trimmedQuery = query.trim();
+
+      if (trimmedQuery) {
+        url.searchParams.set('q', trimmedQuery);
+      } else {
+        url.searchParams.delete('q');
+      }
+
+      if (filter === 'all') {
+        url.searchParams.delete('type');
+      } else {
+        url.searchParams.set('type', filter);
+      }
+
+      window.history.replaceState(null, '', `${url.pathname}${url.search}`);
+    }
+
+    function toSearchFilter(value: string | undefined | null): SearchFilter {
+      return value === 'notes' || value === 'journal' || value === 'projects' ? value : 'all';
+    }
+  }
+</script>
