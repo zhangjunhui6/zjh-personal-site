@@ -5,9 +5,11 @@ import { alternateLanguage, languageNames, localizedPath, uiText } from '@/utils
 
 interface Props {
   lang?: SiteLanguage;
+  showLanguageToggle?: boolean;
 }
 
 const lang = Astro.props.lang ?? site.defaultLang;
+const showLanguageToggle = Astro.props.showLanguageToggle ?? true;
 const text = uiText[lang];
 const currentPath = Astro.url.pathname;
 const otherLang = alternateLanguage(lang);
@@ -37,12 +39,14 @@ const otherHref = localizedPath(currentPath, otherLang);
         </a>
       );
     })}
-    <a
-      class="rounded-full border border-[var(--color-line)] px-3 py-1 text-xs font-semibold text-[var(--color-muted)] no-underline transition-colors hover:border-[var(--color-leaf)] hover:text-[var(--color-leaf)]"
-      href={otherHref}
-      aria-label={`${text.languageSwitch}: ${languageNames[otherLang]}`}
-    >
-      {otherLang === 'en' ? 'EN' : '中文'}
-    </a>
+    {showLanguageToggle && (
+      <a
+        class="rounded-full border border-[var(--color-line)] px-3 py-1 text-xs font-semibold text-[var(--color-muted)] no-underline transition-colors hover:border-[var(--color-leaf)] hover:text-[var(--color-leaf)]"
+        href={otherHref}
+        aria-label={`${text.languageSwitch}: ${languageNames[otherLang]}`}
+      >
+        {otherLang === 'en' ? 'EN' : '中文'}
+      </a>
+    )}
   </nav>
 </header>

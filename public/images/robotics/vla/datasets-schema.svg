@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620" role="img" aria-labelledby="title desc">
+  <title id="title">Robot dataset schema map</title>
+  <desc id="desc">A diagram showing Open X-Embodiment, DROID, and LeRobotDataset as a shared episode and metadata structure.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M2 2 L10 6 L2 10 Z" fill="#2f5d50"/></marker>
+    <style>
+      .bg{fill:#fffdf8}.box{fill:#fff;stroke:#9ab5aa;stroke-width:2;rx:10}.source{fill:#eaf3f0;stroke:#2f5d50;stroke-width:2;rx:12}.store{fill:#f7f3e8;stroke:#d8d0bd;stroke-width:2;rx:12}.warn{fill:#fff4de;stroke:#c9852d;stroke-width:2;rx:12}.text{font:650 22px system-ui,-apple-system,Segoe UI,sans-serif;fill:#1f2a24}.small{font:500 16px system-ui,-apple-system,Segoe UI,sans-serif;fill:#4d5a52}.tiny{font:500 13px system-ui,-apple-system,Segoe UI,sans-serif;fill:#66736c}.line{stroke:#2f5d50;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="620"/>
+  <text x="48" y="54" class="text">Dataset papers: from data scale to runnable schema</text>
+  <text x="48" y="82" class="small">Original anchors: Open X-Embodiment Figure 2, DROID Figure 1, LeRobotDataset v3 diagram.</text>
+
+  <rect x="56" y="130" width="260" height="116" class="source"/><text x="82" y="166" class="text">Open X-Embodiment</text><text x="82" y="196" class="small">22 embodiments</text><text x="82" y="222" class="small">527 skills / 160,266 tasks</text>
+  <rect x="56" y="314" width="260" height="116" class="source"/><text x="82" y="350" class="text">DROID</text><text x="82" y="380" class="small">76k trajectories / 350h</text><text x="82" y="406" class="small">564 scenes / 86 tasks</text>
+
+  <rect x="430" y="108" width="300" height="350" class="store"/>
+  <text x="468" y="148" class="text">Episode</text>
+  <rect x="468" y="182" width="220" height="42" class="box"/><text x="492" y="209" class="small">language instruction</text>
+  <rect x="468" y="240" width="220" height="42" class="box"/><text x="492" y="267" class="small">camera frames</text>
+  <rect x="468" y="298" width="220" height="42" class="box"/><text x="492" y="325" class="small">robot state</text>
+  <rect x="468" y="356" width="220" height="42" class="box"/><text x="492" y="383" class="small">action vector</text>
+
+  <path d="M316 188 C360 188 382 174 430 172" class="line"/>
+  <path d="M316 372 C364 370 386 390 430 390" class="line"/>
+
+  <rect x="822" y="108" width="248" height="350" class="warn"/>
+  <text x="850" y="148" class="text">LeRobotDataset</text>
+  <rect x="850" y="182" width="188" height="42" class="box"/><text x="872" y="209" class="small">meta/info.json</text>
+  <rect x="850" y="240" width="188" height="42" class="box"/><text x="872" y="267" class="small">meta/stats.json</text>
+  <rect x="850" y="298" width="188" height="42" class="box"/><text x="872" y="325" class="small">tasks metadata</text>
+  <rect x="850" y="356" width="188" height="42" class="box"/><text x="872" y="383" class="small">parquet + video</text>
+
+  <path d="M730 282 C770 282 786 282 822 282" class="line"/>
+  <text x="430" y="520" class="tiny">Professional reading check: data diversity matters only if observation keys, action dimensions, fps, and normalization stats remain inspectable.</text>
+</svg>

@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620" role="img" aria-labelledby="title desc">
+  <title id="title">pi0 flow matching architecture</title>
+  <desc id="desc">A self-drawn diagram corresponding to pi0 Figure 3 and Section IV flow matching.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M2 2 L10 6 L2 10 Z" fill="#2f5d50"/></marker>
+    <style>
+      .bg{fill:#fffdf8}.box{fill:#fff;stroke:#9ab5aa;stroke-width:2;rx:10}.main{fill:#eaf3f0;stroke:#2f5d50;stroke-width:2;rx:14}.flow{fill:#fff4de;stroke:#c9852d;stroke-width:2;rx:10}.text{font:650 22px system-ui,-apple-system,Segoe UI,sans-serif;fill:#1f2a24}.small{font:500 16px system-ui,-apple-system,Segoe UI,sans-serif;fill:#4d5a52}.tiny{font:500 13px system-ui,-apple-system,Segoe UI,sans-serif;fill:#66736c}.line{stroke:#2f5d50;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="620"/>
+  <text x="48" y="54" class="text">pi0: VLM context plus flow-matching action expert</text>
+  <text x="48" y="82" class="small">Self-drawn guide for Figure 3 and Section IV.</text>
+
+  <rect x="54" y="128" width="220" height="128" class="box"/><text x="86" y="166" class="text">Observation</text><text x="86" y="198" class="small">2-3 RGB images</text><text x="86" y="224" class="small">language + q_t</text>
+  <rect x="342" y="120" width="232" height="144" class="main"/><text x="378" y="160" class="text">PaliGemma 3B</text><text x="378" y="192" class="small">image/text context</text><text x="378" y="220" class="small">internet-scale priors</text>
+  <rect x="650" y="120" width="240" height="144" class="main"/><text x="686" y="160" class="text">Action expert</text><text x="686" y="192" class="small">300M parameters</text><text x="686" y="220" class="small">robot state + actions</text>
+
+  <rect x="174" y="374" width="224" height="108" class="flow"/><text x="206" y="412" class="text">Noisy chunk</text><text x="206" y="442" class="small">A^tau = tau A +</text><text x="206" y="466" class="small">(1-tau) eps</text>
+  <rect x="492" y="374" width="224" height="108" class="flow"/><text x="524" y="412" class="text">Vector field</text><text x="524" y="442" class="small">match A - eps</text><text x="524" y="466" class="small">10 Euler steps</text>
+  <rect x="810" y="374" width="224" height="108" class="box"/><text x="842" y="412" class="text">Action chunk</text><text x="842" y="442" class="small">H = 50</text><text x="842" y="466" class="small">continuous control</text>
+
+  <path d="M274 192 C304 192 314 192 342 192" class="line"/>
+  <path d="M574 192 C608 192 620 192 650 192" class="line"/>
+  <path d="M770 264 C716 318 646 344 604 374" class="line"/>
+  <path d="M398 428 C432 428 458 428 492 428" class="line"/>
+  <path d="M716 428 C750 428 776 428 810 428" class="line"/>
+
+  <text x="54" y="556" class="tiny">Key reading point: pi0 keeps actions continuous and learns a denoising vector field, unlike OpenVLA's discrete action-token route.</text>
+</svg>

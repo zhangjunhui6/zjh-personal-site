@@ -10,9 +10,11 @@ interface Props {
   title?: string;
   description?: string;
   lang?: SiteLanguage;
+  showLanguageToggle?: boolean;
 }
 
 const lang = Astro.props.lang ?? site.defaultLang;
+const showLanguageToggle = Astro.props.showLanguageToggle ?? true;
 const text = uiText[lang];
 const title = Astro.props.title ? `${Astro.props.title} · ${site.name}` : text.siteTitle;
 const description = Astro.props.description ?? text.siteDescription;
@@ -33,15 +35,19 @@ const enUrl = new URL(localizedPath(Astro.url.pathname, 'en'), site.url);
     <meta property="og:url" content={canonicalUrl.href} />
     <meta name="twitter:card" content="summary" />
     <link rel="canonical" href={canonicalUrl.href} />
-    <link rel="alternate" hreflang="zh-CN" href={zhUrl.href} />
-    <link rel="alternate" hreflang="en" href={enUrl.href} />
-    <link rel="alternate" hreflang="x-default" href={zhUrl.href} />
+    {showLanguageToggle && (
+      <>
+        <link rel="alternate" hreflang="zh-CN" href={zhUrl.href} />
+        <link rel="alternate" hreflang="en" href={enUrl.href} />
+        <link rel="alternate" hreflang="x-default" href={zhUrl.href} />
+      </>
+    )}
     <link rel="icon" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title={`${site.name} RSS`} href="/rss.xml" />
     <title>{title}</title>
   </head>
   <body>
-    <SiteHeader lang={lang} />
+    <SiteHeader lang={lang} showLanguageToggle={showLanguageToggle} />
     <main>
       <slot />
     </main>

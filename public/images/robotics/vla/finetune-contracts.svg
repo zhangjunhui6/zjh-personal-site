@@ -1,0 +1,30 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="600" viewBox="0 0 1120 600" role="img" aria-labelledby="title desc">
+  <title id="title">VLA fine-tuning contracts</title>
+  <desc id="desc">A diagram showing the contracts needed for VLA post-training: data, action, normalization, adapter, and evaluation.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M2 2 L10 6 L2 10 Z" fill="#2f5d50"/></marker>
+    <style>
+      .bg{fill:#fffdf8}.box{fill:#fff;stroke:#9ab5aa;stroke-width:2;rx:10}.main{fill:#eaf3f0;stroke:#2f5d50;stroke-width:2;rx:14}.risk{fill:#fff4de;stroke:#c9852d;stroke-width:2;rx:10}.text{font:650 22px system-ui,-apple-system,Segoe UI,sans-serif;fill:#1f2a24}.small{font:500 16px system-ui,-apple-system,Segoe UI,sans-serif;fill:#4d5a52}.tiny{font:500 13px system-ui,-apple-system,Segoe UI,sans-serif;fill:#66736c}.line{stroke:#2f5d50;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="600"/>
+  <text x="48" y="54" class="text">VLA post-training: five contracts must match</text>
+  <text x="48" y="82" class="small">LoRA lowers update cost; it does not fix robot interface errors.</text>
+
+  <rect x="56" y="156" width="190" height="100" class="box"/><text x="86" y="194" class="text">Dataset</text><text x="86" y="224" class="small">camera / state keys</text>
+  <rect x="286" y="156" width="190" height="100" class="risk"/><text x="316" y="194" class="text">Action</text><text x="316" y="224" class="small">dim / frame / gripper</text>
+  <rect x="516" y="156" width="190" height="100" class="risk"/><text x="546" y="194" class="text">Norm stats</text><text x="546" y="224" class="small">mean / std / unnorm</text>
+  <rect x="746" y="156" width="190" height="100" class="box"/><text x="776" y="194" class="text">Adapter</text><text x="776" y="224" class="small">LoRA / action expert</text>
+
+  <rect x="400" y="358" width="320" height="118" class="main"/><text x="434" y="398" class="text">Evaluation loop</text><text x="434" y="428" class="small">base vs finetuned</text><text x="434" y="454" class="small">ID vs OOD + failure types</text>
+
+  <path d="M246 206 C260 206 272 206 286 206" class="line"/>
+  <path d="M476 206 C490 206 502 206 516 206" class="line"/>
+  <path d="M706 206 C720 206 732 206 746 206" class="line"/>
+  <path d="M151 256 C210 338 300 382 400 406" class="line"/>
+  <path d="M381 256 C414 304 466 334 500 358" class="line"/>
+  <path d="M611 256 C594 304 574 334 560 358" class="line"/>
+  <path d="M841 256 C792 324 740 360 720 406" class="line"/>
+
+  <text x="56" y="538" class="tiny">Professional reading check: if a fine-tuning report hides data mapping or norm stats, its success rate is hard to interpret.</text>
+</svg>

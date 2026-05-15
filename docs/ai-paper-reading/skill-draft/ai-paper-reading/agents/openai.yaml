@@ -1,0 +1,4 @@
+interface:
+  display_name: "AI Paper Reading"
+  short_description: "Read and review AI research papers"
+  default_prompt: "Use $ai-paper-reading to review this AI paper explanation and suggest concrete improvements."

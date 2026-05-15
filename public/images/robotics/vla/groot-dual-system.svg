@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="640" viewBox="0 0 1120 640" role="img" aria-labelledby="title desc">
+  <title id="title">GR00T N1 dual-system architecture</title>
+  <desc id="desc">A diagram corresponding to GR00T N1 Figure 2 and Figure 3.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M2 2 L10 6 L2 10 Z" fill="#2f5d50"/></marker>
+    <style>
+      .bg{fill:#fffdf8}.box{fill:#fff;stroke:#9ab5aa;stroke-width:2;rx:10}.main{fill:#eaf3f0;stroke:#2f5d50;stroke-width:2;rx:14}.flow{fill:#fff4de;stroke:#c9852d;stroke-width:2;rx:10}.text{font:650 22px system-ui,-apple-system,Segoe UI,sans-serif;fill:#1f2a24}.small{font:500 16px system-ui,-apple-system,Segoe UI,sans-serif;fill:#4d5a52}.tiny{font:500 13px system-ui,-apple-system,Segoe UI,sans-serif;fill:#66736c}.line{stroke:#2f5d50;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="640"/>
+  <text x="48" y="54" class="text">GR00T N1: dual-system humanoid VLA</text>
+  <text x="48" y="82" class="small">Self-drawn guide for Figure 2 and Figure 3.</text>
+
+  <rect x="54" y="132" width="220" height="104" class="box"/><text x="86" y="170" class="text">Images + text</text><text x="86" y="200" class="small">humanoid task context</text>
+  <rect x="54" y="324" width="220" height="104" class="box"/><text x="86" y="362" class="text">Robot state</text><text x="86" y="392" class="small">embodiment-specific</text>
+
+  <rect x="348" y="116" width="260" height="136" class="main"/><text x="384" y="156" class="text">System 2</text><text x="384" y="188" class="small">Eagle-2 VLM</text><text x="384" y="216" class="small">semantic context</text>
+  <rect x="348" y="320" width="260" height="124" class="flow"/><text x="384" y="358" class="text">Encoders</text><text x="384" y="388" class="small">state / action MLPs</text><text x="384" y="414" class="small">per embodiment</text>
+
+  <rect x="682" y="194" width="260" height="174" class="main"/><text x="718" y="236" class="text">System 1</text><text x="718" y="268" class="small">DiT flow policy</text><text x="718" y="296" class="small">cross-attend VLM tokens</text><text x="718" y="324" class="small">sample 16-action chunk</text>
+  <rect x="812" y="456" width="220" height="100" class="box"/><text x="844" y="494" class="text">Humanoid</text><text x="844" y="524" class="small">bimanual actions</text>
+
+  <path d="M274 184 C304 184 318 184 348 184" class="line"/>
+  <path d="M274 376 C304 376 318 382 348 382" class="line"/>
+  <path d="M608 184 C644 206 654 228 682 244" class="line"/>
+  <path d="M608 382 C646 354 660 330 682 312" class="line"/>
+  <path d="M812 368 C840 400 870 430 922 456" class="line"/>
+
+  <rect x="82" y="520" width="540" height="58" class="flow"/><text x="112" y="556" class="small">Training data: human videos + simulation + synthetic data + real robot trajectories</text>
+  <path d="M352 520 C472 472 598 378 682 330" class="line"/>
+
+  <text x="54" y="608" class="tiny">Key reading point: GR00T is a humanoid system stack; the model, embodiment adapters, data flywheel, and low-level control boundary all matter.</text>
+</svg>

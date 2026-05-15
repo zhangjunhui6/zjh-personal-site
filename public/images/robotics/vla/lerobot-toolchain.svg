@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="560" viewBox="0 0 1120 560" role="img" aria-labelledby="title desc">
+  <title id="title">LeRobot tooling pipeline</title>
+  <desc id="desc">A diagram of LeRobotDataset, metadata, processor, policy, environment, and evaluation logs.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M2 2 L10 6 L2 10 Z" fill="#2f5d50"/></marker>
+    <style>
+      .bg{fill:#fffdf8}.box{fill:#fff;stroke:#9ab5aa;stroke-width:2;rx:10}.main{fill:#eaf3f0;stroke:#2f5d50;stroke-width:2;rx:14}.warn{fill:#fff4de;stroke:#c9852d;stroke-width:2;rx:12}.text{font:650 22px system-ui,-apple-system,Segoe UI,sans-serif;fill:#1f2a24}.small{font:500 16px system-ui,-apple-system,Segoe UI,sans-serif;fill:#4d5a52}.tiny{font:500 13px system-ui,-apple-system,Segoe UI,sans-serif;fill:#66736c}.line{stroke:#2f5d50;stroke-width:3;fill:none;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="560"/>
+  <text x="48" y="54" class="text">LeRobot: paper concepts become interfaces</text>
+  <text x="48" y="82" class="small">Read schema and stats before running any model.</text>
+
+  <rect x="52" y="174" width="220" height="120" class="main"/>
+  <text x="84" y="216" class="text">Dataset</text>
+  <text x="84" y="246" class="small">features</text>
+  <text x="84" y="272" class="small">episodes / frames</text>
+
+  <rect x="334" y="94" width="210" height="92" class="box"/><text x="360" y="128" class="text">info.json</text><text x="360" y="154" class="small">shape / dtype / fps</text>
+  <rect x="334" y="220" width="210" height="92" class="warn"/><text x="360" y="254" class="text">stats.json</text><text x="360" y="280" class="small">mean / std / min / max</text>
+  <rect x="334" y="346" width="210" height="92" class="box"/><text x="360" y="380" class="text">tasks</text><text x="360" y="406" class="small">language to index</text>
+
+  <rect x="620" y="174" width="190" height="120" class="main"/><text x="652" y="216" class="text">Processor</text><text x="652" y="246" class="small">resize / tokenize</text><text x="652" y="272" class="small">normalize</text>
+  <rect x="878" y="106" width="190" height="92" class="box"/><text x="910" y="140" class="text">Policy</text><text x="910" y="166" class="small">action dim / chunk</text>
+  <rect x="878" y="278" width="190" height="92" class="box"/><text x="910" y="312" class="text">Eval loop</text><text x="910" y="338" class="small">rollout / success</text>
+
+  <path d="M272 232 C300 190 308 146 334 140" class="line"/>
+  <path d="M272 242 C300 250 308 264 334 266" class="line"/>
+  <path d="M272 252 C304 324 310 386 334 392" class="line"/>
+  <path d="M544 266 C574 254 590 244 620 236" class="line"/>
+  <path d="M810 214 C840 182 850 160 878 152" class="line"/>
+  <path d="M810 254 C840 286 850 312 878 324" class="line"/>
+
+  <text x="52" y="500" class="tiny">Failure mode to watch: a model can load and a loss can decrease while action scale or gripper convention is wrong.</text>
+</svg>

@@ -52,4 +52,30 @@ describe('notes directory structure', () => {
     assert.match(redirects[1], /Astro\.redirect\('\/notes\/software\/devops\/docker-daily-development-guide\/', 301\)/);
     assert.match(redirects[2], /Astro\.redirect\('\/notes\/robotics\/ros\/robot-urdf-modeling-guide\/', 301\)/);
   });
+
+  it('keeps draft-only robotics VLA material out of public notes routes', async () => {
+    const notesIndex = await source('src/pages/notes/index.astro');
+
+    assert.doesNotMatch(notesIndex, /\/notes\/robotics\/vla\//);
+    assert.doesNotMatch(notesIndex, /docs\/drafts/);
+    await assert.rejects(() => source('src/pages/notes/robotics/vla/index.astro'), { code: 'ENOENT' });
+    await assert.rejects(() => source('src/pages/notes/robotics/vla/[...slug].astro'), { code: 'ENOENT' });
+  });
+
+  it('hides language switching on VLA draft preview routes', async () => {
+    const [draftIndex, draftDetail, baseLayout, contentLayout, siteHeader] = await Promise.all([
+      source('src/pages/drafts/robotics/vla/index.astro'),
+      source('src/pages/drafts/robotics/vla/[...slug].astro'),
+      source('src/layouts/BaseLayout.astro'),
+      source('src/layouts/ContentLayout.astro'),
+      source('src/components/SiteHeader.astro'),
+    ]);
+
+    assert.match(draftIndex, /<BaseLayout[\s\S]*showLanguageToggle={false}/);
+    assert.match(draftDetail, /<ContentLayout[\s\S]*showLanguageToggle={false}/);
+    assert.match(contentLayout, /showLanguageToggle\?: boolean/);
+    assert.match(baseLayout, /showLanguageToggle && \([\s\S]*<link rel="alternate" hreflang="en"/);
+    assert.match(baseLayout, /<SiteHeader lang={lang} showLanguageToggle={showLanguageToggle} \/>/);
+    assert.match(siteHeader, /showLanguageToggle &&/);
+  });
 });

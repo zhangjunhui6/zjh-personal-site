@@ -1,0 +1,63 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import type { SiteLanguage } from '@/config/site';
+import { localizedPath } from '@/utils/i18n';
+import { formatDate } from '@/utils/dates';
+import type { NoteTopicDomainView, NoteTopicView } from '@/utils/noteHub';
+
+interface Props {
+  domain: NoteTopicDomainView;
+  topic: NoteTopicView;
+  lang: SiteLanguage;
+}
+
+const { domain, topic, lang } = Astro.props;
+const notesHref = localizedPath('/notes/', lang);
+const articleLabel = lang === 'en'
+  ? `${topic.count} ${topic.count === 1 ? 'article' : 'articles'}`
+  : `${topic.count} 篇`;
+const text = {
+  back: lang === 'en' ? 'Back to notes' : '返回记录',
+  latest: lang === 'en' ? 'Latest update' : '最近更新',
+  articles: lang === 'en' ? 'Articles' : '全部文章',
+};
+---
+
+<BaseLayout title={`${topic.localizedTitle} · ${domain.localizedTitle}`} description={topic.localizedDescription} lang={lang}>
+  <section class="container py-12">
+    <a class="mb-8 inline-block text-sm font-semibold text-[var(--color-muted)] no-underline hover:text-[var(--color-leaf)]" href={notesHref}>
+      {text.back}
+    </a>
+
+    <header class="mb-10 max-w-3xl">
+      <p class="mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-[var(--color-leaf)]">{domain.localizedTitle}</p>
+      <h1 class="m-0 text-4xl font-semibold leading-tight md:text-5xl">{topic.localizedTitle}</h1>
+      <p class="mt-5 text-lg leading-8 text-[var(--color-muted)]">{topic.localizedDescription}</p>
+      <div class="mt-6 flex flex-wrap gap-2 text-sm text-[var(--color-muted)]">
+        <span class="rounded-full border border-[var(--color-line)] px-3 py-1">{articleLabel}</span>
+        <time class="rounded-full border border-[var(--color-line)] px-3 py-1" datetime={topic.latestDate.toISOString()}>
+          {text.latest} {formatDate(topic.latestDate, lang)}
+        </time>
+      </div>
+    </header>
+
+    <section>
+      <div class="mb-5 border-b border-[var(--color-line)] pb-3">
+        <h2 class="m-0 text-2xl font-semibold">{text.articles}</h2>
+      </div>
+      <ol class="m-0 list-none divide-y divide-[var(--color-line)] p-0">
+        {topic.entries.map((entry) => (
+          <li class="grid gap-3 py-5 md:grid-cols-[9rem_1fr]">
+            <time class="text-sm text-[var(--color-muted)]" datetime={entry.date.toISOString()}>{formatDate(entry.date, lang)}</time>
+            <div>
+              <h3 class="m-0 text-xl font-semibold leading-snug">
+                <a class="no-underline hover:text-[var(--color-leaf)]" href={entry.href}>{entry.title}</a>
+              </h3>
+              <p class="mb-0 mt-2 leading-7 text-[var(--color-muted)]">{entry.description}</p>
+            </div>
+          </li>
+        ))}
+      </ol>
+    </section>
+  </section>
+</BaseLayout>
