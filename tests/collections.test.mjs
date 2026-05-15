@@ -1,4 +1,5 @@
 import assert from 'node:assert/strict';
+import { readFile } from 'node:fs/promises';
 import { describe, it } from 'node:test';
 import {
   featuredProjects,
@@ -50,5 +51,23 @@ describe('collection helpers', () => {
     ]);
 
     assert.deepEqual(sorted.map((item) => item.id), ['newer-featured', 'older-featured']);
+  });
+});
+
+describe('technical notes content', () => {
+  it('includes a URDF guide with ROS-free local assumptions and core modeling sections', async () => {
+    const article = await readFile(
+      new URL('../src/content/notes/robot-urdf-modeling-guide.md', import.meta.url),
+      'utf8',
+    );
+
+    assert.match(article, /title: 把机器人写成一棵树：URDF 的建模入门/);
+    assert.match(article, /tags: \[机器人, ROS, URDF, 工具\]/);
+    assert.match(article, /本地不需要先安装 ROS 2/);
+    assert.match(article, /## URDF 是什么/);
+    assert.match(article, /## Link 和 joint：把机器人拆成一棵树/);
+    assert.match(article, /## Visual、collision、inertial 不要混在一起/);
+    assert.match(article, /## 没有 ROS 2 环境时怎么学习 URDF/);
+    assert.match(article, /https:\/\/docs\.ros\.org\/en\/rolling\/Tutorials\/Intermediate\/URDF\/URDF-Main\.html/);
   });
 });
