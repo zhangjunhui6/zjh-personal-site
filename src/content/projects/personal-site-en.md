@@ -11,6 +11,10 @@ media:
     src: /images/projects/personal-site/media-source-options.svg
     alt: No-card media source options for the personal site
     caption: Small media can use public static paths, while hosted media can use full Cloudinary delivery URLs.
+  - type: image
+    src: https://res.cloudinary.com/dp7apbx6r/image/upload/v1778857386/177_o81hxd.jpg
+    alt: Screenshot of an automated mixing system process monitoring interface
+    caption: "Cloudinary remote image example: an automated mixing system process monitoring interface."
 featured: true
 lang: en
 translationKey: personal-site

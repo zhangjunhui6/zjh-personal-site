@@ -11,6 +11,10 @@ media:
     src: /images/projects/personal-site/media-source-options.svg
     alt: 个人网站无卡媒体来源选项示意图
     caption: 当前推荐的小媒体走 public 静态路径，需要在线托管的媒体走 Cloudinary 完整 URL。
+  - type: image
+    src: https://res.cloudinary.com/dp7apbx6r/image/upload/v1778857386/177_o81hxd.jpg
+    alt: 自动搅拌系统工艺流程监控界面截图
+    caption: "Cloudinary 远程图片接入示例：自动搅拌系统工艺流程监控界面。"
 featured: true
 lang: zh
 translationKey: personal-site
