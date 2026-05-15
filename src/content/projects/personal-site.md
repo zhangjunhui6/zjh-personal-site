@@ -7,6 +7,7 @@ stack: [Astro, TypeScript, Tailwind CSS, Keystatic, Cloudflare Pages]
 links: []
 featured: true
 lang: zh
+translationKey: personal-site
 draft: false
 ---
 

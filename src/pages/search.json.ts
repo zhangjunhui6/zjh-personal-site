@@ -1,13 +1,16 @@
 import { getCollection } from 'astro:content';
 import { isPublished } from '@/utils/collections';
+import { entriesForLanguage, localizedContentHref, uiText } from '@/utils/i18n';
 import { createSearchDocument } from '@/utils/search';
 
 export const prerender = true;
 
 export async function GET() {
-  const notes = (await getCollection('notes')).filter(isPublished);
-  const journal = (await getCollection('journal')).filter(isPublished);
-  const projects = (await getCollection('projects')).filter(isPublished);
+  const lang = 'zh';
+  const text = uiText[lang];
+  const notes = entriesForLanguage((await getCollection('notes')).filter(isPublished), lang);
+  const journal = entriesForLanguage((await getCollection('journal')).filter(isPublished), lang);
+  const projects = entriesForLanguage((await getCollection('projects')).filter(isPublished), lang);
 
   const items = [
     ...notes.map((entry) =>
@@ -17,8 +20,8 @@ export async function GET() {
         title: entry.data.title,
         description: entry.data.description,
         date: entry.data.date.toISOString(),
-        href: `/notes/${entry.id}/`,
-        label: '记录',
+        href: localizedContentHref('notes', entry, lang),
+        label: text.collectionLabels.notes,
         tags: entry.data.tags,
         body: entry.body ?? '',
       }),
@@ -30,8 +33,8 @@ export async function GET() {
         title: entry.data.title,
         description: entry.data.description,
         date: entry.data.date.toISOString(),
-        href: `/journal/${entry.id}/`,
-        label: '生活',
+        href: localizedContentHref('journal', entry, lang),
+        label: text.collectionLabels.journal,
         tags: entry.data.tags,
         body: entry.body ?? '',
       }),
@@ -43,8 +46,8 @@ export async function GET() {
         title: entry.data.title,
         description: entry.data.description,
         date: entry.data.date.toISOString(),
-        href: `/projects/${entry.id}/`,
-        label: '项目',
+        href: localizedContentHref('projects', entry, lang),
+        label: text.collectionLabels.projects,
         tags: entry.data.stack,
         body: entry.body ?? '',
       }),

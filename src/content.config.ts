@@ -8,6 +8,7 @@ const baseEntry = {
   date: z.coerce.date(),
   tags: z.array(z.string()).default([]),
   lang: z.enum(['zh', 'en']).default('zh'),
+  translationKey: z.string().optional(),
   draft: z.boolean().default(false),
 };
 
@@ -50,6 +51,7 @@ const projects = defineCollection({
     cover: z.string().optional(),
     featured: z.boolean().default(false),
     lang: z.enum(['zh', 'en']).default('zh'),
+    translationKey: z.string().optional(),
     draft: z.boolean().default(false),
   }),
 });

@@ -1,4 +1,8 @@
 ---
+import { site } from '@/config/site';
+import type { SiteLanguage } from '@/config/site';
+import { uiText } from '@/utils/i18n';
+
 interface Heading {
   depth: number;
   slug: string;
@@ -7,13 +11,15 @@ interface Heading {
 
 interface Props {
   headings: Heading[];
+  lang?: SiteLanguage;
 }
 
-const { headings } = Astro.props;
+const { headings, lang = site.defaultLang } = Astro.props;
+const text = uiText[lang];
 ---
 
-<nav class="toc-panel" aria-label="文章目录">
-  <p class="toc-title">本文目录</p>
+<nav class="toc-panel" aria-label={text.tocLabel}>
+  <p class="toc-title">{text.tocTitle}</p>
   <ol class="toc-list">
     {headings.map((heading) => (
       <li class={`toc-item toc-link-depth-${heading.depth}`}>

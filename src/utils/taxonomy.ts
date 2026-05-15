@@ -1,4 +1,6 @@
 import type { CollectionEntry } from 'astro:content';
+import type { SiteLanguage } from '../config/site.ts';
+import { contentSlug, localizedPath, uiText } from './i18n.ts';
 
 export type TaggedCollection = 'notes' | 'journal';
 
@@ -32,13 +34,14 @@ export function tagSlug(tag: string): string {
   return encodeURIComponent(normalizeTag(tag));
 }
 
-export function tagHref(tag: string): string {
-  return `/tags/${tagSlug(tag)}/`;
+export function tagHref(tag: string, lang: SiteLanguage = 'zh'): string {
+  return localizedPath(`/tags/${tagSlug(tag)}/`, lang);
 }
 
 export function toTaggedContentItems(
   notes: CollectionEntry<'notes'>[],
   journal: CollectionEntry<'journal'>[],
+  lang: SiteLanguage = 'zh',
 ): TaggedContentItem[] {
   return sortNewestFirst([
     ...notes.map((entry) => ({
@@ -48,8 +51,8 @@ export function toTaggedContentItems(
       description: entry.data.description,
       date: entry.data.date,
       tags: entry.data.tags,
-      href: `/notes/${entry.id}/`,
-      label: '记录',
+      href: localizedPath(`/notes/${contentSlug(entry)}/`, lang),
+      label: uiText[lang].collectionLabels.notes,
     })),
     ...journal.map((entry) => ({
       id: entry.id,
@@ -58,13 +61,13 @@ export function toTaggedContentItems(
       description: entry.data.description,
       date: entry.data.date,
       tags: entry.data.tags,
-      href: `/journal/${entry.id}/`,
-      label: '生活',
+      href: localizedPath(`/journal/${contentSlug(entry)}/`, lang),
+      label: uiText[lang].collectionLabels.journal,
     })),
   ]);
 }
 
-export function collectTagSummaries(items: TaggedContentItem[]): TagSummary[] {
+export function collectTagSummaries(items: TaggedContentItem[], lang: SiteLanguage = 'zh'): TagSummary[] {
   const counts = new Map<string, number>();
 
   for (const item of items) {
@@ -74,8 +77,8 @@ export function collectTagSummaries(items: TaggedContentItem[]): TagSummary[] {
   }
 
   return [...counts.entries()]
-    .map(([tag, count]) => ({ tag, count, href: tagHref(tag) }))
-    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag, 'zh-CN'));
+    .map(([tag, count]) => ({ tag, count, href: tagHref(tag, lang) }))
+    .sort((a, b) => b.count - a.count || a.tag.localeCompare(b.tag, lang === 'en' ? 'en-US' : 'zh-CN'));
 }
 
 export function filterItemsByTag(items: TaggedContentItem[], tag: string): TaggedContentItem[] {

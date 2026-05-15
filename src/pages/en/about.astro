@@ -1,0 +1,19 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const lang = 'en';
+---
+
+<BaseLayout title="About" description="About ZJH and this personal space." lang={lang}>
+  <section class="container grid gap-10 py-12 md:grid-cols-[0.8fr_1.2fr]">
+    <div>
+      <p class="mb-3 text-sm font-semibold uppercase text-[var(--color-clay)]">About</p>
+      <h1 class="m-0 text-4xl font-semibold">About this space</h1>
+    </div>
+    <div class="prose">
+      <p>This is ZJH's personal website, built to keep a long-running record of technology, life, projects, and ideas in progress.</p>
+      <p>The first version stays intentionally simple: write things down, make the pages comfortable to read, and leave the structure ready to grow slowly.</p>
+      <p>Contact details and more personal information will be added after the content settles.</p>
+    </div>
+  </section>
+</BaseLayout>

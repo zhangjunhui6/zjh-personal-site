@@ -1,16 +1,28 @@
 ---
 import { site } from '@/config/site';
+import type { SiteLanguage } from '@/config/site';
+import { alternateLanguage, languageNames, localizedPath, uiText } from '@/utils/i18n';
 
+interface Props {
+  lang?: SiteLanguage;
+}
+
+const lang = Astro.props.lang ?? site.defaultLang;
+const text = uiText[lang];
 const currentPath = Astro.url.pathname;
+const otherLang = alternateLanguage(lang);
+const otherHref = localizedPath(currentPath, otherLang);
 ---
 
 <header class="container flex flex-col items-start gap-4 py-6 sm:flex-row sm:items-center sm:justify-between">
-  <a class="text-lg font-semibold no-underline" href="/" aria-label="返回首页">
+  <a class="text-lg font-semibold no-underline" href={localizedPath('/', lang)} aria-label={text.backHome}>
     {site.name}
   </a>
-  <nav class="flex flex-wrap items-center gap-4 text-sm text-[var(--color-muted)] sm:justify-end" aria-label="主导航">
-    {site.nav.map((item) => {
-      const isActive = currentPath === item.href || (item.href !== '/' && currentPath.startsWith(item.href));
+  <nav class="flex flex-wrap items-center gap-4 text-sm text-[var(--color-muted)] sm:justify-end" aria-label={text.mainNav}>
+    {text.nav.map((item) => {
+      const href = localizedPath(item.href, lang);
+      const homeHref = localizedPath('/', lang);
+      const isActive = currentPath === href || (href !== homeHref && currentPath.startsWith(href));
 
       return (
         <a
@@ -18,12 +30,19 @@ const currentPath = Astro.url.pathname;
             'no-underline transition-colors',
             isActive ? 'text-[var(--color-ink)]' : 'hover:text-[var(--color-leaf)]',
           ]}
-          href={item.href}
+          href={href}
           aria-current={isActive ? 'page' : undefined}
         >
           {item.label}
         </a>
       );
     })}
+    <a
+      class="rounded-full border border-[var(--color-line)] px-3 py-1 text-xs font-semibold text-[var(--color-muted)] no-underline transition-colors hover:border-[var(--color-leaf)] hover:text-[var(--color-leaf)]"
+      href={otherHref}
+      aria-label={`${text.languageSwitch}: ${languageNames[otherLang]}`}
+    >
+      {otherLang === 'en' ? 'EN' : '中文'}
+    </a>
   </nav>
 </header>

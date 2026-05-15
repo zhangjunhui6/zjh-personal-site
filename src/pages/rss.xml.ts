@@ -3,6 +3,7 @@ import type { APIContext } from 'astro';
 import { getCollection } from 'astro:content';
 import { site } from '@/config/site';
 import { isPublished } from '@/utils/collections';
+import { entriesForLanguage, localizedContentHref, uiText } from '@/utils/i18n';
 
 type FeedItem = {
   title: string;
@@ -12,20 +13,21 @@ type FeedItem = {
 };
 
 export async function GET(context: APIContext) {
-  const notes = (await getCollection('notes')).filter(isPublished);
-  const journal = (await getCollection('journal')).filter(isPublished);
+  const lang = 'zh';
+  const notes = entriesForLanguage((await getCollection('notes')).filter(isPublished), lang);
+  const journal = entriesForLanguage((await getCollection('journal')).filter(isPublished), lang);
   const items: FeedItem[] = [
     ...notes.map((entry) => ({
       title: entry.data.title,
       description: entry.data.description,
       pubDate: entry.data.date,
-      link: `/notes/${entry.id}/`,
+      link: localizedContentHref('notes', entry, lang),
     })),
     ...journal.map((entry) => ({
       title: entry.data.title,
       description: entry.data.description,
       pubDate: entry.data.date,
-      link: `/journal/${entry.id}/`,
+      link: localizedContentHref('journal', entry, lang),
     })),
   ].sort((a, b) => {
     const byDate = b.pubDate.valueOf() - a.pubDate.valueOf();
@@ -34,7 +36,7 @@ export async function GET(context: APIContext) {
 
   return rss({
     title: site.title,
-    description: site.description,
+    description: uiText[lang].siteDescription,
     site: context.site ?? new URL(site.url),
     customData: '<language>zh-CN</language>',
     items,

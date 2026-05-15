@@ -1,24 +1,29 @@
 ---
+import { site } from '@/config/site';
+import type { SiteLanguage } from '@/config/site';
+import { localizedPath, uiText } from '@/utils/i18n';
+
 interface Props {
   label?: string;
   placeholder?: string;
   collection?: 'notes' | 'journal' | 'projects';
+  lang?: SiteLanguage;
   class?: string;
 }
 
 const {
-  label = '搜索全站内容',
-  placeholder = '搜索标题、标签、正文',
   collection,
+  lang = site.defaultLang,
   class: className = '',
 } = Astro.props;
+const text = uiText[lang];
+const label = Astro.props.label ?? (lang === 'en' ? 'Search the site' : '搜索全站内容');
+const placeholder = Astro.props.placeholder ?? (lang === 'en' ? 'Search titles, tags, body text' : '搜索标题、标签、正文');
 const inputId = collection ? `${collection}-search-shortcut` : 'site-search-shortcut';
-const scopeLabel = collection
-  ? ({ notes: '记录', journal: '生活', projects: '项目' } as const)[collection]
-  : '全站';
+const scopeLabel = collection ? text.collectionLabels[collection] : text.searchScopeAll;
 ---
 
-<form action="/search/" method="get" role="search" class:list={['search-shortcut', className]}>
+<form action={localizedPath('/search/', lang)} method="get" role="search" class:list={['search-shortcut', className]}>
   <div class="rounded-lg border border-[var(--color-line)] bg-[rgba(255,253,248,0.86)] p-3 shadow-[0_18px_48px_rgba(78,68,52,0.08)] backdrop-blur sm:p-4">
     <div class="mb-3 flex items-center justify-between gap-3">
       <label class="text-sm font-semibold text-[var(--color-ink)]" for={inputId}>{label}</label>
@@ -44,9 +49,9 @@ const scopeLabel = collection
         class="inline-flex min-h-12 items-center justify-center gap-2 rounded-md border border-[var(--color-leaf)] bg-[var(--color-leaf)] px-5 text-sm font-semibold text-white transition hover:border-[var(--color-ink)] hover:bg-[var(--color-ink)] focus:outline-none focus:ring-2 focus:ring-[rgba(47,93,80,0.18)] sm:min-w-24"
       >
         <span aria-hidden="true">↵</span>
-        <span>搜索</span>
+        <span>{text.searchSubmit}</span>
       </button>
     </div>
-    <p class="mb-0 mt-3 text-xs leading-5 text-[var(--color-muted)]">按标题、标签和正文检索，回车直接查看结果。</p>
+    <p class="mb-0 mt-3 text-xs leading-5 text-[var(--color-muted)]">{text.searchHint}</p>
   </div>
 </form>

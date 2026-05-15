@@ -1,0 +1,24 @@
+---
+import { getCollection } from 'astro:content';
+import ContentCard from '@/components/ContentCard.astro';
+import SearchShortcut from '@/components/SearchShortcut.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { isPublished, notesByPinnedThenNewest } from '@/utils/collections';
+import { entriesForLanguage, localizedContentHref } from '@/utils/i18n';
+
+const lang = 'en';
+const notes = notesByPinnedThenNewest(entriesForLanguage((await getCollection('notes')).filter(isPublished), lang));
+---
+
+<BaseLayout title="Notes" description="Articles, technical notes, reading notes, and long-running thoughts." lang={lang}>
+  <section class="container py-12">
+    <h1 class="mb-4 text-4xl font-semibold">Notes</h1>
+    <p class="mb-6 max-w-2xl leading-8 text-[var(--color-muted)]">Articles, technical notes, reading notes, and questions still taking shape.</p>
+    <SearchShortcut class="mb-8 max-w-2xl" label="Search notes" placeholder="Search note titles, tags, body text" collection="notes" lang={lang} />
+    <div class="grid gap-4 md:grid-cols-2">
+      {notes.map((entry) => (
+        <ContentCard title={entry.data.title} description={entry.data.description} date={entry.data.date} href={localizedContentHref('notes', entry, lang)} lang={lang} />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

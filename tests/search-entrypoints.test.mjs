@@ -8,11 +8,12 @@ describe('search entrypoints', () => {
   it('defines a reusable search shortcut form that submits to the search page', async () => {
     const component = await source('src/components/SearchShortcut.astro');
 
-    assert.match(component, /action="\/search\/"/);
+    assert.match(component, /localizedPath\('\/search\/', lang\)/);
     assert.match(component, /method="get"/);
     assert.match(component, /name="q"/);
     assert.match(component, /name="type"/);
-    assert.match(component, /回车直接查看结果/);
+    assert.match(component, /uiText\[lang\]/);
+    assert.match(component, /text\.searchHint/);
     assert.match(component, /⌕/);
   });
 
@@ -59,7 +60,8 @@ describe('search entrypoints', () => {
     assert.match(layout, /TableOfContents/);
     assert.match(layout, /headings\?:/);
     assert.match(layout, /<TableOfContents headings=\{visibleHeadings\}/);
-    assert.match(toc, /aria-label="文章目录"/);
+    assert.match(toc, /uiText\[lang\]/);
+    assert.match(toc, /aria-label=\{text\.tocLabel\}/);
     assert.match(toc, /href=\{`#\$\{heading\.slug\}`\}/);
     assert.match(toc, /toc-link-depth-\$\{heading\.depth\}/);
     assert.match(notesPage, /const \{ Content, headings \} = await render\(entry\);/);

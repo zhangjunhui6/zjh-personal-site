@@ -7,6 +7,7 @@ location: Shanghai
 images: []
 tags: [散步, 观察]
 lang: zh
+translationKey: a-small-walk
 draft: false
 ---
 

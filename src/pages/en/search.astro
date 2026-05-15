@@ -1,0 +1,219 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+const lang = 'en';
+const filters = [
+  { label: 'All', value: 'all' },
+  { label: 'Notes', value: 'notes' },
+  { label: 'Journal', value: 'journal' },
+  { label: 'Projects', value: 'projects' },
+] as const;
+---
+
+<BaseLayout title="Search" description="Search notes, journal entries, and projects." lang={lang}>
+  <section class="container py-12" data-search-root data-search-index="/en/search.json">
+    <h1 class="mb-4 text-4xl font-semibold">Search</h1>
+    <p class="mb-6 max-w-2xl leading-8 text-[var(--color-muted)]">Find signals already written down across titles, tags, and body text.</p>
+
+    <div class="max-w-3xl rounded-lg border border-[var(--color-line)] bg-[rgba(255,253,248,0.86)] p-4 shadow-[0_18px_48px_rgba(78,68,52,0.08)] backdrop-blur sm:p-5">
+      <form class="grid gap-2 sm:grid-cols-[minmax(0,1fr)_auto]" role="search" data-search-form>
+        <label class="sr-only" for="site-search-input">Search query</label>
+        <div class="relative">
+          <span class="pointer-events-none absolute left-3 top-1/2 -translate-y-1/2 text-lg text-[var(--color-muted)]" aria-hidden="true">⌕</span>
+          <input
+            id="site-search-input"
+            class="min-h-12 w-full rounded-md border border-[var(--color-line)] bg-[var(--color-surface)] px-4 pl-10 text-base text-[var(--color-ink)] outline-none transition-colors placeholder:text-[rgba(104,117,111,0.82)] focus:border-[var(--color-leaf)] focus:ring-2 focus:ring-[rgba(47,93,80,0.16)]"
+            type="search"
+            name="q"
+            placeholder="Search titles, tags, body text"
+            autocomplete="off"
+            data-search-input
+          />
+        </div>
+        <button
+          class="inline-flex min-h-12 items-center justify-center gap-2 rounded-md border border-[var(--color-leaf)] bg-[var(--color-leaf)] px-5 text-sm font-semibold text-white transition hover:border-[var(--color-ink)] hover:bg-[var(--color-ink)] focus:outline-none focus:ring-2 focus:ring-[rgba(47,93,80,0.18)] sm:min-w-24"
+          type="submit"
+        >
+          <span aria-hidden="true">↵</span>
+          <span>Search</span>
+        </button>
+      </form>
+
+      <div class="mt-4 flex flex-wrap items-center gap-2" role="group" aria-label="Content type">
+        <span class="mr-1 text-xs font-semibold uppercase text-[var(--color-clay)]">Scope</span>
+        {
+          filters.map((filter) => (
+            <button
+              class="search-filter rounded-full border border-[var(--color-line)] bg-[var(--color-surface)] px-3 py-1 text-sm text-[var(--color-muted)] transition-colors hover:border-[var(--color-leaf)] hover:text-[var(--color-leaf)]"
+              type="button"
+              data-search-filter={filter.value}
+              aria-pressed={filter.value === 'all' ? 'true' : 'false'}
+            >
+              {filter.label}
+            </button>
+          ))
+        }
+      </div>
+    </div>
+
+    <p class="mt-6 min-h-6 text-sm text-[var(--color-muted)]" aria-live="polite" data-search-status></p>
+    <div class="mt-6 max-w-3xl rounded-lg border border-dashed border-[var(--color-line)] bg-[rgba(255,253,248,0.56)] px-5 py-8 text-[var(--color-muted)]" data-search-empty>
+      Waiting for a query
+    </div>
+    <div class="mt-6 grid gap-4 md:grid-cols-2" data-search-results></div>
+  </section>
+</BaseLayout>
+
+<script>
+  import { searchDocuments, type SearchDocument, type SearchFilter, type SearchResult } from '@/utils/search';
+
+  const root = document.querySelector<HTMLElement>('[data-search-root]');
+  const dateFormatter = new Intl.DateTimeFormat('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  });
+
+  if (root) {
+    const form = root.querySelector<HTMLFormElement>('[data-search-form]');
+    const input = root.querySelector<HTMLInputElement>('[data-search-input]');
+    const status = root.querySelector<HTMLElement>('[data-search-status]');
+    const empty = root.querySelector<HTMLElement>('[data-search-empty]');
+    const resultsContainer = root.querySelector<HTMLElement>('[data-search-results]');
+    const filterButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-search-filter]'));
+    const params = new URLSearchParams(window.location.search);
+    const initialFilter = toSearchFilter(params.get('type'));
+    let documents: SearchDocument[] = [];
+    let activeFilter: SearchFilter = initialFilter;
+
+    if (input && status && empty && resultsContainer) {
+      input.value = params.get('q') ?? '';
+      setActiveFilter(activeFilter);
+      render();
+
+      form?.addEventListener('submit', (event) => {
+        event.preventDefault();
+        render();
+      });
+
+      input.addEventListener('input', render);
+
+      filterButtons.forEach((button) => {
+        button.addEventListener('click', () => {
+          activeFilter = toSearchFilter(button.dataset.searchFilter);
+          setActiveFilter(activeFilter);
+          render();
+        });
+      });
+
+      fetch(root.dataset.searchIndex ?? '/en/search.json')
+        .then((response) => {
+          if (!response.ok) throw new Error('Search index request failed.');
+          return response.json() as Promise<{ items: SearchDocument[] }>;
+        })
+        .then((payload) => {
+          documents = payload.items;
+          render();
+        })
+        .catch(() => {
+          status.textContent = 'Search index is temporarily unavailable';
+          empty.hidden = true;
+        });
+    }
+
+    function render() {
+      if (!input || !status || !empty || !resultsContainer) return;
+
+      const query = input.value;
+      const results = searchDocuments(documents, query, activeFilter);
+      syncUrl(query, activeFilter);
+      resultsContainer.replaceChildren();
+
+      if (!query.trim()) {
+        status.textContent = '';
+        empty.textContent = 'Waiting for a query';
+        empty.hidden = false;
+        return;
+      }
+
+      if (results.length === 0) {
+        status.textContent = '0 results';
+        empty.textContent = 'No matching content found';
+        empty.hidden = false;
+        return;
+      }
+
+      status.textContent = `${results.length} results`;
+      empty.hidden = true;
+      results.forEach((result) => resultsContainer.append(createResultCard(result)));
+    }
+
+    function createResultCard(result: SearchResult): HTMLElement {
+      const article = document.createElement('article');
+      article.className = 'quiet-card p-5';
+
+      const label = document.createElement('p');
+      label.className = 'mb-3 text-xs font-semibold uppercase text-[var(--color-clay)]';
+      label.textContent = result.label;
+
+      const title = document.createElement('h3');
+      title.className = 'mb-3 mt-0 text-xl font-semibold';
+      const link = document.createElement('a');
+      link.className = 'no-underline';
+      link.href = result.href;
+      link.textContent = result.title;
+      title.append(link);
+
+      const excerpt = document.createElement('p');
+      excerpt.className = 'mb-4 leading-7 text-[var(--color-muted)]';
+      excerpt.textContent = result.excerpt;
+
+      const meta = document.createElement('div');
+      meta.className = 'flex flex-wrap items-center gap-2 text-sm text-[var(--color-muted)]';
+
+      const time = document.createElement('time');
+      time.dateTime = result.date;
+      time.textContent = dateFormatter.format(new Date(result.date));
+      meta.append(time);
+
+      result.tags.slice(0, 4).forEach((tag) => {
+        const tagChip = document.createElement('span');
+        tagChip.className = 'rounded-full border border-[var(--color-line)] px-2 py-0.5 text-xs';
+        tagChip.textContent = tag;
+        meta.append(tagChip);
+      });
+
+      article.append(label, title, excerpt, meta);
+      return article;
+    }
+
+    function setActiveFilter(filter: SearchFilter) {
+      filterButtons.forEach((button) => {
+        button.setAttribute('aria-pressed', String(button.dataset.searchFilter === filter));
+      });
+    }
+
+    function syncUrl(query: string, filter: SearchFilter) {
+      const url = new URL(window.location.href);
+      const trimmedQuery = query.trim();
+
+      if (trimmedQuery) {
+        url.searchParams.set('q', trimmedQuery);
+      } else {
+        url.searchParams.delete('q');
+      }
+
+      if (filter === 'all') {
+        url.searchParams.delete('type');
+      } else {
+        url.searchParams.set('type', filter);
+      }
+
+      window.history.replaceState(null, '', `${url.pathname}${url.search}`);
+    }
+
+    function toSearchFilter(value: string | undefined | null): SearchFilter {
+      return value === 'notes' || value === 'journal' || value === 'projects' ? value : 'all';
+    }
+  }
+</script>

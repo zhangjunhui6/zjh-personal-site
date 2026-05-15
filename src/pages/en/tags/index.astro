@@ -1,0 +1,37 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { isPublished } from '@/utils/collections';
+import { entriesForLanguage } from '@/utils/i18n';
+import { collectTagSummaries, toTaggedContentItems } from '@/utils/taxonomy';
+
+const lang = 'en';
+const notes = entriesForLanguage((await getCollection('notes')).filter(isPublished), lang);
+const journal = entriesForLanguage((await getCollection('journal')).filter(isPublished), lang);
+const tags = collectTagSummaries(toTaggedContentItems(notes, journal, lang), lang);
+---
+
+<BaseLayout title="Tags" description="Browse notes and journal entries by topic." lang={lang}>
+  <section class="container py-12">
+    <h1 class="mb-4 text-4xl font-semibold">Tags</h1>
+    <p class="mb-8 max-w-2xl leading-8 text-[var(--color-muted)]">Connect notes and journal fragments by topic, question, or recurring interest.</p>
+
+    {
+      tags.length > 0 ? (
+        <div class="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+          {tags.map((tag) => (
+            <a
+              class="quiet-card flex items-center justify-between gap-4 px-4 py-3 no-underline transition-colors hover:border-[var(--color-leaf)]"
+              href={tag.href}
+            >
+              <span class="font-medium">{tag.tag}</span>
+              <span class="shrink-0 text-sm text-[var(--color-muted)]">{tag.count} entries</span>
+            </a>
+          ))}
+        </div>
+      ) : (
+        <p class="leading-8 text-[var(--color-muted)]">No tags are ready to browse yet.</p>
+      )
+    }
+  </section>
+</BaseLayout>

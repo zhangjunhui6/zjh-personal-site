@@ -3,6 +3,7 @@ import { getCollection } from 'astro:content';
 import ContentCard from '@/components/ContentCard.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { isPublished } from '@/utils/collections';
+import { entriesForLanguage } from '@/utils/i18n';
 import {
   collectTagSummaries,
   filterItemsByTag,
@@ -15,24 +16,25 @@ interface Props {
 }
 
 export async function getStaticPaths() {
-  const notes = (await getCollection('notes')).filter(isPublished);
-  const journal = (await getCollection('journal')).filter(isPublished);
-  const items = toTaggedContentItems(notes, journal);
+  const notes = entriesForLanguage((await getCollection('notes')).filter(isPublished), 'zh');
+  const journal = entriesForLanguage((await getCollection('journal')).filter(isPublished), 'zh');
+  const items = toTaggedContentItems(notes, journal, 'zh');
 
-  return collectTagSummaries(items).map(({ tag }) => ({
+  return collectTagSummaries(items, 'zh').map(({ tag }) => ({
     params: { tag: tagSlug(tag) },
     props: { tag },
   }));
 }
 
 const { tag } = Astro.props;
-const notes = (await getCollection('notes')).filter(isPublished);
-const journal = (await getCollection('journal')).filter(isPublished);
-const entries = filterItemsByTag(toTaggedContentItems(notes, journal), tag);
+const lang = 'zh';
+const notes = entriesForLanguage((await getCollection('notes')).filter(isPublished), lang);
+const journal = entriesForLanguage((await getCollection('journal')).filter(isPublished), lang);
+const entries = filterItemsByTag(toTaggedContentItems(notes, journal, lang), tag);
 const description = `查看与「${tag}」相关的记录和生活内容。`;
 ---
 
-<BaseLayout title={`标签：${tag}`} description={description}>
+<BaseLayout title={`标签：${tag}`} description={description} lang={lang}>
   <section class="container py-12">
     <a class="mb-6 inline-block text-sm text-[var(--color-muted)]" href="/tags/">← 所有标签</a>
     <h1 class="mb-4 text-4xl font-semibold">#{tag}</h1>
@@ -46,6 +48,7 @@ const description = `查看与「${tag}」相关的记录和生活内容。`;
           date={entry.date}
           href={entry.href}
           label={entry.label}
+          lang={lang}
         />
       ))}
     </div>

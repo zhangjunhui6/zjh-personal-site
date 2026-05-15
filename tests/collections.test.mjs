@@ -57,7 +57,7 @@ describe('collection helpers', () => {
 describe('technical notes content', () => {
   it('includes an engineering-focused URDF guide with modeling, validation, and expert workflow sections', async () => {
     const article = await readFile(
-      new URL('../src/content/notes/robot-urdf-modeling-guide.md', import.meta.url),
+      new URL('../src/content/notes/robotics/ros/robot-urdf-modeling-guide.md', import.meta.url),
       'utf8',
     );
 
