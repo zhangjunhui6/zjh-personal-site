@@ -55,19 +55,35 @@ describe('collection helpers', () => {
 });
 
 describe('technical notes content', () => {
-  it('includes a URDF guide with ROS-free local assumptions and core modeling sections', async () => {
+  it('includes an engineering-focused URDF guide with modeling, validation, and expert workflow sections', async () => {
     const article = await readFile(
       new URL('../src/content/notes/robot-urdf-modeling-guide.md', import.meta.url),
       'utf8',
     );
 
-    assert.match(article, /title: 把机器人写成一棵树：URDF 的建模入门/);
+    assert.match(article, /title: 把机器人写成一棵可验证的树：URDF 从结构建模到工具链上手/);
     assert.match(article, /tags: \[机器人, ROS, URDF, 工具\]/);
-    assert.match(article, /本地不需要先安装 ROS 2/);
-    assert.match(article, /## URDF 是什么/);
-    assert.match(article, /## Link 和 joint：把机器人拆成一棵树/);
-    assert.match(article, /## Visual、collision、inertial 不要混在一起/);
-    assert.match(article, /## 没有 ROS 2 环境时怎么学习 URDF/);
+    assert.doesNotMatch(article, /没有 ROS 2 环境/);
+    assert.doesNotMatch(article, /本地不需要/);
+    assert.match(article, /## 快速理解：URDF 解决的不是控制，而是结构共识/);
+    assert.match(article, /## 心智模型：link 是节点，joint 是边/);
+    assert.match(article, /## 上手路径：从最小模型到可视化验证/);
+    assert.match(article, /## 工具链能力地图/);
+    assert.match(article, /## URDF 一定要依赖 ROS 2 吗/);
+    assert.match(article, /## 进阶路线：从能用到接近领域专家/);
+    assert.match(article, /robot_state_publisher/);
+    assert.match(article, /MoveIt Setup Assistant/);
+    assert.match(article, /urdfpy/);
+    assert.match(article, /Drake/);
+    assert.match(article, /Isaac Sim/);
+    assert.match(article, /USD/);
+    assert.match(article, /MJCF/);
     assert.match(article, /https:\/\/docs\.ros\.org\/en\/rolling\/Tutorials\/Intermediate\/URDF\/URDF-Main\.html/);
+    assert.match(article, /https:\/\/github\.com\/ros\/robot_state_publisher/);
+    assert.match(article, /https:\/\/moveit\.picknik\.ai\/main\/doc\/examples\/setup_assistant\/setup_assistant_tutorial\.html/);
+    assert.match(article, /https:\/\/github\.com\/ros\/urdfdom/);
+    assert.match(article, /https:\/\/urdfpy\.readthedocs\.io\/en\/latest\/index\.html/);
+    assert.match(article, /https:\/\/drake\.mit\.edu\/doxygen_cxx\/group__multibody__parsing\.html/);
+    assert.match(article, /https:\/\/docs\.isaacsim\.omniverse\.nvidia\.com\/latest\/importer_exporter\/import_urdf\.html/);
   });
 });
