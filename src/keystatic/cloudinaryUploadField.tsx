@@ -211,7 +211,7 @@ function isPreviewableImage(value: string) {
 }
 
 async function requestUploadSignature(token: string, folder: string, resourceType: CloudinaryResourceType) {
-  const response = await fetch('/api/media/cloudinary-signature', {
+  const response = await fetch('/api/media-upload-signature', {
     method: 'POST',
     headers: {
       authorization: `Bearer ${token}`,

@@ -57,7 +57,7 @@ The upload flow is:
 
 ```text
 Keystatic upload button
-  -> /api/media/cloudinary-signature
+  -> /api/media-upload-signature
   -> browser direct upload to Cloudinary
   -> secure_url is written back into the content field
 ```
