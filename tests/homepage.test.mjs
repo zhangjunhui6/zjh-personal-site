@@ -32,7 +32,7 @@ describe('homepage information architecture', () => {
 
     assert.match(home, /entry\.id === 'personal-site'/);
     assert.match(home, /项目案例/);
-    assert.match(home, /\/projects\/\$\{featuredProject\.id\}\//);
+    assert.match(home, /localizedContentHref\('projects', featuredProject, lang\)/);
   });
 
   it('removes placeholder content from the public collections', async () => {

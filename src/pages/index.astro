@@ -3,21 +3,23 @@ import { getCollection } from 'astro:content';
 import SearchShortcut from '@/components/SearchShortcut.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { featuredProjects, isPublished, newestFirst } from '@/utils/collections';
+import { entriesForLanguage, localizedContentHref } from '@/utils/i18n';
 
-const notes = newestFirst((await getCollection('notes')).filter(isPublished));
-const journal = newestFirst((await getCollection('journal')).filter(isPublished));
-const projects = featuredProjects(await getCollection('projects'));
+const lang = 'zh';
+const notes = newestFirst(entriesForLanguage((await getCollection('notes')).filter(isPublished), lang));
+const journal = newestFirst(entriesForLanguage((await getCollection('journal')).filter(isPublished), lang));
+const projects = featuredProjects(entriesForLanguage(await getCollection('projects'), lang));
 const featuredProject = projects.find((entry) => entry.id === 'personal-site') ?? projects[0];
 
 const latestEntries = [
   ...notes.map((entry) => ({
     entry,
-    href: `/notes/${entry.id}/`,
+    href: localizedContentHref('notes', entry, lang),
     label: '文章',
   })),
   ...journal.map((entry) => ({
     entry,
-    href: `/journal/${entry.id}/`,
+    href: localizedContentHref('journal', entry, lang),
     label: '生活',
   })),
 ]
@@ -61,7 +63,7 @@ const dateFormatter = new Intl.DateTimeFormat('zh-CN', {
 });
 ---
 
-<BaseLayout description="技术文章、项目记录、标签和归档入口。">
+<BaseLayout description="技术文章、项目记录、标签和归档入口。" lang={lang}>
   <section class="container py-12 md:py-16">
     <div class="grid gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(280px,0.92fr)] lg:items-end">
       <div>
@@ -73,7 +75,7 @@ const dateFormatter = new Intl.DateTimeFormat('zh-CN', {
           搜索、标签、归档和项目案例是这个站点的主要入口；最新内容只负责把近期写作推到你面前。
         </p>
       </div>
-      <SearchShortcut class="lg:pb-1" label="搜索这个空间" placeholder="搜索 Git、Docker、项目、标签" />
+      <SearchShortcut class="lg:pb-1" label="搜索这个空间" placeholder="搜索 Git、Docker、项目、标签" lang={lang} />
     </div>
 
     <nav class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label="首页主要入口">
@@ -132,7 +134,7 @@ const dateFormatter = new Intl.DateTimeFormat('zh-CN', {
                 <span class="rounded-full border border-[var(--color-line)] px-3 py-1 text-xs text-[var(--color-muted)]">{item}</span>
               ))}
             </div>
-            <a class="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-leaf)]" href={`/projects/${featuredProject.id}/`}>
+            <a class="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-leaf)]" href={localizedContentHref('projects', featuredProject, lang)}>
               阅读项目架构
               <span aria-hidden="true">→</span>
             </a>

@@ -4,18 +4,20 @@ import ProjectCard from '@/components/ProjectCard.astro';
 import SearchShortcut from '@/components/SearchShortcut.astro';
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import { isPublished, newestFirst } from '@/utils/collections';
+import { entriesForLanguage, localizedContentHref } from '@/utils/i18n';
 
-const projects = newestFirst((await getCollection('projects')).filter(isPublished));
+const lang = 'zh';
+const projects = newestFirst(entriesForLanguage((await getCollection('projects')).filter(isPublished), lang));
 ---
 
-<BaseLayout title="项目" description="小工具、实验项目和作品记录。">
+<BaseLayout title="项目" description="小工具、实验项目和作品记录。" lang={lang}>
   <section class="container py-12">
     <h1 class="mb-4 text-4xl font-semibold">项目</h1>
     <p class="mb-6 max-w-2xl leading-8 text-[var(--color-muted)]">一些正在做的小工具、网站实验和长期项目。</p>
-    <SearchShortcut class="mb-8 max-w-2xl" label="搜索项目" placeholder="搜索项目名称、技术栈、状态" collection="projects" />
+    <SearchShortcut class="mb-8 max-w-2xl" label="搜索项目" placeholder="搜索项目名称、技术栈、状态" collection="projects" lang={lang} />
     <div class="grid gap-4 md:grid-cols-2">
       {projects.map((entry) => (
-        <ProjectCard title={entry.data.title} description={entry.data.description} href={`/projects/${entry.id}/`} stack={entry.data.stack} status={entry.data.status} />
+        <ProjectCard title={entry.data.title} description={entry.data.description} href={localizedContentHref('projects', entry, lang)} stack={entry.data.stack} status={entry.data.status} lang={lang} />
       ))}
     </div>
   </section>

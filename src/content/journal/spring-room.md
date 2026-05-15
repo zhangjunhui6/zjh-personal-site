@@ -7,6 +7,7 @@ location: Shanghai
 images: []
 tags: [生活, 房间]
 lang: zh
+translationKey: spring-room
 draft: false
 ---
 

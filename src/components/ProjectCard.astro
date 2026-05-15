@@ -1,20 +1,19 @@
 ---
+import { site } from '@/config/site';
+import type { SiteLanguage } from '@/config/site';
+import { uiText } from '@/utils/i18n';
+
 interface Props {
   title: string;
   description: string;
   href: string;
   stack: string[];
   status: string;
+  lang?: SiteLanguage;
 }
 
-const { title, description, href, stack, status } = Astro.props;
-const statusLabels: Record<string, string> = {
-  active: '进行中',
-  paused: '暂停',
-  finished: '已完成',
-  archive: '归档',
-};
-const statusLabel = statusLabels[status] ?? status;
+const { title, description, href, stack, status, lang = site.defaultLang } = Astro.props;
+const statusLabel = uiText[lang].projectStatus[status as keyof typeof uiText.zh.projectStatus] ?? status;
 ---
 
 <article class="quiet-card p-5">

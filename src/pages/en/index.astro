@@ -1,0 +1,146 @@
+---
+import { getCollection } from 'astro:content';
+import SearchShortcut from '@/components/SearchShortcut.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { featuredProjects, isPublished, newestFirst } from '@/utils/collections';
+import { entriesForLanguage, localizedContentHref, localizedPath } from '@/utils/i18n';
+
+const lang = 'en';
+const notes = newestFirst(entriesForLanguage((await getCollection('notes')).filter(isPublished), lang));
+const journal = newestFirst(entriesForLanguage((await getCollection('journal')).filter(isPublished), lang));
+const projects = featuredProjects(entriesForLanguage(await getCollection('projects'), lang));
+const featuredProject = projects.find((entry) => entry.data.translationKey === 'personal-site') ?? projects[0];
+
+const latestEntries = [
+  ...notes.map((entry) => ({
+    entry,
+    href: localizedContentHref('notes', entry, lang),
+    label: 'Article',
+  })),
+  ...journal.map((entry) => ({
+    entry,
+    href: localizedContentHref('journal', entry, lang),
+    label: 'Journal',
+  })),
+]
+  .sort((a, b) => {
+    const byDate = b.entry.data.date.valueOf() - a.entry.data.date.valueOf();
+    return byDate === 0 ? a.entry.data.title.localeCompare(b.entry.data.title) : byDate;
+  })
+  .slice(0, 5);
+
+const quickLinks = [
+  {
+    title: 'Notes',
+    description: 'Technical guides, development workflows, and long-running thoughts.',
+    href: localizedPath('/notes/', lang),
+    meta: `${notes.length} posts`,
+  },
+  {
+    title: 'Projects',
+    description: 'Tools, websites, experiments, and project retrospectives.',
+    href: localizedPath('/projects/', lang),
+    meta: `${projects.length} projects`,
+  },
+  {
+    title: 'Tags',
+    description: 'Rediscover Git, Docker, writing, and tools by topic.',
+    href: localizedPath('/tags/', lang),
+    meta: 'Topic index',
+  },
+  {
+    title: 'Archive',
+    description: 'Browse the full record of this space by time.',
+    href: localizedPath('/archive/', lang),
+    meta: 'Timeline',
+  },
+];
+
+const dateFormatter = new Intl.DateTimeFormat('en-US', {
+  year: 'numeric',
+  month: 'short',
+  day: '2-digit',
+});
+---
+
+<BaseLayout description="Technical notes, project records, tags, and archive entry points." lang={lang}>
+  <section class="container py-12 md:py-16">
+    <div class="grid gap-8 lg:grid-cols-[minmax(0,1.08fr)_minmax(280px,0.92fr)] lg:items-end">
+      <div>
+        <p class="mb-4 text-sm font-semibold uppercase text-[var(--color-clay)]">Content System</p>
+        <h1 class="m-0 max-w-4xl text-4xl font-semibold leading-tight md:text-6xl">
+          A searchable space for technical notes, projects, and life records.
+        </h1>
+        <p class="mt-5 max-w-2xl text-lg leading-8 text-[var(--color-muted)]">
+          Search, tags, archives, and project case studies are the main entry points; the latest stream simply brings recent writing forward.
+        </p>
+      </div>
+      <SearchShortcut class="lg:pb-1" label="Search this space" placeholder="Search Git, Docker, projects, tags" lang={lang} />
+    </div>
+
+    <nav class="mt-8 grid gap-3 sm:grid-cols-2 lg:grid-cols-4" aria-label="Primary homepage entry points">
+      {quickLinks.map((link) => (
+        <a class="quiet-card group block p-5 transition hover:-translate-y-0.5 hover:border-[var(--color-leaf)]" href={link.href}>
+          <span class="text-xs font-semibold uppercase text-[var(--color-clay)]">{link.meta}</span>
+          <span class="mt-3 flex items-center justify-between gap-4">
+            <span class="text-xl font-semibold text-[var(--color-ink)]">{link.title}</span>
+            <span class="text-lg text-[var(--color-muted)] transition group-hover:translate-x-1 group-hover:text-[var(--color-leaf)]" aria-hidden="true">→</span>
+          </span>
+          <span class="mt-3 block min-h-12 leading-6 text-[var(--color-muted)]">{link.description}</span>
+        </a>
+      ))}
+    </nav>
+  </section>
+
+  <section class="container pb-14">
+    <div class="mb-5 flex flex-wrap items-end justify-between gap-4">
+      <div>
+        <p class="mb-2 text-xs font-semibold uppercase text-[var(--color-clay)]">Latest</p>
+        <h2 class="m-0 text-2xl font-semibold md:text-3xl">Latest writing</h2>
+      </div>
+      <a class="text-sm font-semibold text-[var(--color-muted)] hover:text-[var(--color-leaf)]" href={localizedPath('/archive/', lang)}>View full archive</a>
+    </div>
+
+    <div class="grid gap-4 lg:grid-cols-[minmax(0,1fr)_340px]">
+      <div class="grid gap-3">
+        {latestEntries.map((item) => (
+          <a class="quiet-card group grid gap-3 p-5 transition hover:border-[var(--color-leaf)] md:grid-cols-[132px_minmax(0,1fr)]" href={item.href}>
+            <div>
+              <p class="m-0 text-xs font-semibold uppercase text-[var(--color-clay)]">{item.label}</p>
+              <time class="mt-2 block text-sm text-[var(--color-muted)]" datetime={item.entry.data.date.toISOString()}>
+                {dateFormatter.format(item.entry.data.date)}
+              </time>
+            </div>
+            <div class="min-w-0">
+              <h3 class="m-0 text-xl font-semibold leading-snug text-[var(--color-ink)] group-hover:text-[var(--color-leaf)]">
+                {item.entry.data.title}
+              </h3>
+              <p class="mb-0 mt-3 leading-7 text-[var(--color-muted)]">{item.entry.data.description}</p>
+            </div>
+          </a>
+        ))}
+      </div>
+
+      {featuredProject && (
+        <aside class="quiet-card flex flex-col justify-between p-6">
+          <div>
+            <p class="mb-3 text-xs font-semibold uppercase text-[var(--color-clay)]">Project case study</p>
+            <h2 class="m-0 text-2xl font-semibold leading-snug">{featuredProject.data.title}</h2>
+            <p class="mb-0 mt-4 leading-7 text-[var(--color-muted)]">{featuredProject.data.description}</p>
+          </div>
+          <div class="mt-6">
+            <div class="mb-5 flex flex-wrap gap-2">
+              {featuredProject.data.stack.slice(0, 5).map((item) => (
+                <span class="rounded-full border border-[var(--color-line)] px-3 py-1 text-xs text-[var(--color-muted)]">{item}</span>
+              ))}
+            </div>
+            <a class="inline-flex items-center gap-2 text-sm font-semibold text-[var(--color-leaf)]" href={localizedContentHref('projects', featuredProject, lang)}>
+              Read the project architecture
+              <span aria-hidden="true">→</span>
+            </a>
+          </div>
+        </aside>
+      )}
+    </div>
+  </section>
+</BaseLayout>

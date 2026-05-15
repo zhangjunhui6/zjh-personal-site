@@ -15,6 +15,6 @@ export const site = {
     { label: '搜索', href: '/search/' },
     { label: '关于', href: '/about/' },
   ],
-};
+} as const;
 
 export type SiteLanguage = (typeof site.languages)[number];

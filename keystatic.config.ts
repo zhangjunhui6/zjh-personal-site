@@ -51,6 +51,10 @@ const baseEntryFields = {
     options: langOptions,
     defaultValue: 'zh',
   }),
+  translationKey: fields.text({
+    label: 'Translation key',
+    description: 'Shared stable key for translated versions of the same entry.',
+  }),
   draft: fields.checkbox({
     label: 'Draft',
     defaultValue: false,
@@ -168,6 +172,10 @@ export default config({
           label: 'Language',
           options: langOptions,
           defaultValue: 'zh',
+        }),
+        translationKey: fields.text({
+          label: 'Translation key',
+          description: 'Shared stable key for translated versions of the same project.',
         }),
         draft: fields.checkbox({
           label: 'Draft',

@@ -1,6 +1,8 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
 import TableOfContents from '@/components/TableOfContents.astro';
+import { site } from '@/config/site';
+import type { SiteLanguage } from '@/config/site';
 import { formatDate } from '@/utils/dates';
 import { tagHref } from '@/utils/taxonomy';
 
@@ -17,20 +19,22 @@ interface Props {
   updated?: Date;
   tags?: string[];
   headings?: Heading[];
+  lang?: SiteLanguage;
 }
 
-const { title, description, date, updated, tags = [], headings = [] } = Astro.props;
+const { title, description, date, updated, tags = [], headings = [], lang = site.defaultLang } = Astro.props;
 const visibleTags = tags.map((tag) => tag.trim()).filter(Boolean);
 const visibleHeadings = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3 && heading.slug && heading.text);
 const showTableOfContents = visibleHeadings.length >= 2;
+const updatedLabel = lang === 'en' ? 'Updated' : '更新于';
 ---
 
-<BaseLayout title={title} description={description}>
+<BaseLayout title={title} description={description} lang={lang}>
   <article class="container py-12">
     <header class="mb-10 max-w-3xl">
-      <time class="mb-3 block text-sm text-[var(--color-muted)]" datetime={date.toISOString()}>{formatDate(date)}</time>
+      <time class="mb-3 block text-sm text-[var(--color-muted)]" datetime={date.toISOString()}>{formatDate(date, lang)}</time>
       {updated && (
-        <time class="mb-3 block text-sm text-[var(--color-muted)]" datetime={updated.toISOString()}>更新于 {formatDate(updated)}</time>
+        <time class="mb-3 block text-sm text-[var(--color-muted)]" datetime={updated.toISOString()}>{updatedLabel} {formatDate(updated, lang)}</time>
       )}
       <h1 class="m-0 text-4xl font-semibold leading-tight md:text-5xl">{title}</h1>
       <p class="mt-5 text-lg leading-8 text-[var(--color-muted)]">{description}</p>
@@ -39,7 +43,7 @@ const showTableOfContents = visibleHeadings.length >= 2;
           {visibleTags.map((tag) => (
             <a
               class="rounded-full border border-[var(--color-line)] px-3 py-1 text-xs text-[var(--color-muted)] no-underline transition-colors hover:border-[var(--color-leaf)] hover:text-[var(--color-leaf)]"
-              href={tagHref(tag)}
+              href={tagHref(tag, lang)}
             >
               {tag}
             </a>
@@ -53,7 +57,7 @@ const showTableOfContents = visibleHeadings.length >= 2;
           <slot />
         </div>
       </div>
-      {showTableOfContents && <TableOfContents headings={visibleHeadings} />}
+      {showTableOfContents && <TableOfContents headings={visibleHeadings} lang={lang} />}
     </div>
   </article>
 </BaseLayout>

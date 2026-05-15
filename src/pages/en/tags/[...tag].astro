@@ -1,0 +1,57 @@
+---
+import { getCollection } from 'astro:content';
+import ContentCard from '@/components/ContentCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { isPublished } from '@/utils/collections';
+import { entriesForLanguage, localizedPath } from '@/utils/i18n';
+import {
+  collectTagSummaries,
+  filterItemsByTag,
+  tagSlug,
+  toTaggedContentItems,
+} from '@/utils/taxonomy';
+
+interface Props {
+  tag: string;
+}
+
+export async function getStaticPaths() {
+  const lang = 'en';
+  const notes = entriesForLanguage((await getCollection('notes')).filter(isPublished), lang);
+  const journal = entriesForLanguage((await getCollection('journal')).filter(isPublished), lang);
+  const items = toTaggedContentItems(notes, journal, lang);
+
+  return collectTagSummaries(items, lang).map(({ tag }) => ({
+    params: { tag: tagSlug(tag) },
+    props: { tag },
+  }));
+}
+
+const { tag } = Astro.props;
+const lang = 'en';
+const notes = entriesForLanguage((await getCollection('notes')).filter(isPublished), lang);
+const journal = entriesForLanguage((await getCollection('journal')).filter(isPublished), lang);
+const entries = filterItemsByTag(toTaggedContentItems(notes, journal, lang), tag);
+const description = `Browse notes and journal entries tagged "${tag}".`;
+---
+
+<BaseLayout title={`Tag: ${tag}`} description={description} lang={lang}>
+  <section class="container py-12">
+    <a class="mb-6 inline-block text-sm text-[var(--color-muted)]" href={localizedPath('/tags/', lang)}>← All tags</a>
+    <h1 class="mb-4 text-4xl font-semibold">#{tag}</h1>
+    <p class="mb-8 max-w-2xl leading-8 text-[var(--color-muted)]">{description}</p>
+
+    <div class="grid gap-4 md:grid-cols-2">
+      {entries.map((entry) => (
+        <ContentCard
+          title={entry.title}
+          description={entry.description}
+          date={entry.date}
+          href={entry.href}
+          label={entry.label}
+          lang={lang}
+        />
+      ))}
+    </div>
+  </section>
+</BaseLayout>

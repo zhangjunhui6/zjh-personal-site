@@ -4,6 +4,7 @@ description: 从 link、joint、坐标系、URDF/Xacro 到 robot_state_publisher
 date: 2026-05-14
 tags: [机器人, ROS, URDF, 工具]
 lang: zh
+translationKey: robotics/ros/robot-urdf-modeling-guide
 draft: false
 ---
 

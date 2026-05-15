@@ -1,0 +1,51 @@
+---
+import { getCollection } from 'astro:content';
+import ContentCard from '@/components/ContentCard.astro';
+import BaseLayout from '@/layouts/BaseLayout.astro';
+import { isPublished } from '@/utils/collections';
+import { entriesForLanguage } from '@/utils/i18n';
+import { groupItemsByYear, toTaggedContentItems } from '@/utils/taxonomy';
+
+const lang = 'en';
+const notes = entriesForLanguage((await getCollection('notes')).filter(isPublished), lang);
+const journal = entriesForLanguage((await getCollection('journal')).filter(isPublished), lang);
+const groups = groupItemsByYear(toTaggedContentItems(notes, journal, lang));
+---
+
+<BaseLayout title="Archive" description="Browse notes and journal entries by year." lang={lang}>
+  <section class="container py-12">
+    <h1 class="mb-4 text-4xl font-semibold">Archive</h1>
+    <p class="mb-10 max-w-2xl leading-8 text-[var(--color-muted)]">Look back through all public notes and journal entries by time.</p>
+
+    {
+      groups.length > 0 ? (
+        <div class="space-y-12">
+          {groups.map((group) => (
+            <section aria-labelledby={`archive-${group.year}`}>
+              <div class="mb-4 flex items-baseline justify-between gap-4 border-b border-[var(--color-line)] pb-3">
+                <h2 id={`archive-${group.year}`} class="m-0 text-2xl font-semibold">
+                  {group.year}
+                </h2>
+                <p class="m-0 text-sm text-[var(--color-muted)]">{group.entries.length} entries</p>
+              </div>
+              <div class="grid gap-4 md:grid-cols-2">
+                {group.entries.map((entry) => (
+                  <ContentCard
+                    title={entry.title}
+                    description={entry.description}
+                    date={entry.date}
+                    href={entry.href}
+                    label={entry.label}
+                    lang={lang}
+                  />
+                ))}
+              </div>
+            </section>
+          ))}
+        </div>
+      ) : (
+        <p class="leading-8 text-[var(--color-muted)]">No public entries are ready for the archive yet.</p>
+      )
+    }
+  </section>
+</BaseLayout>

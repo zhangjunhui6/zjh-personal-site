@@ -2,22 +2,27 @@
 import SiteFooter from '@/components/SiteFooter.astro';
 import SiteHeader from '@/components/SiteHeader.astro';
 import { site } from '@/config/site';
+import type { SiteLanguage } from '@/config/site';
+import { htmlLang, localizedPath, uiText } from '@/utils/i18n';
 import '@/styles/global.css';
 
 interface Props {
   title?: string;
   description?: string;
-  lang?: string;
+  lang?: SiteLanguage;
 }
 
-const title = Astro.props.title ? `${Astro.props.title} · ${site.name}` : site.title;
-const description = Astro.props.description ?? site.description;
-const lang = Astro.props.lang ?? 'zh-CN';
+const lang = Astro.props.lang ?? site.defaultLang;
+const text = uiText[lang];
+const title = Astro.props.title ? `${Astro.props.title} · ${site.name}` : text.siteTitle;
+const description = Astro.props.description ?? text.siteDescription;
 const canonicalUrl = new URL(Astro.url.pathname, site.url);
+const zhUrl = new URL(localizedPath(Astro.url.pathname, 'zh'), site.url);
+const enUrl = new URL(localizedPath(Astro.url.pathname, 'en'), site.url);
 ---
 
 <!doctype html>
-<html lang={lang}>
+<html lang={htmlLang[lang]}>
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -28,15 +33,18 @@ const canonicalUrl = new URL(Astro.url.pathname, site.url);
     <meta property="og:url" content={canonicalUrl.href} />
     <meta name="twitter:card" content="summary" />
     <link rel="canonical" href={canonicalUrl.href} />
+    <link rel="alternate" hreflang="zh-CN" href={zhUrl.href} />
+    <link rel="alternate" hreflang="en" href={enUrl.href} />
+    <link rel="alternate" hreflang="x-default" href={zhUrl.href} />
     <link rel="icon" href="/favicon.svg" />
     <link rel="alternate" type="application/rss+xml" title={`${site.name} RSS`} href="/rss.xml" />
     <title>{title}</title>
   </head>
   <body>
-    <SiteHeader />
+    <SiteHeader lang={lang} />
     <main>
       <slot />
     </main>
-    <SiteFooter />
+    <SiteFooter lang={lang} />
   </body>
 </html>

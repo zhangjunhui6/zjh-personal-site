@@ -2,10 +2,14 @@
 import { getCollection, render } from 'astro:content';
 import ContentLayout from '@/layouts/ContentLayout.astro';
 import { isPublished } from '@/utils/collections';
+import { contentSlug, entriesForLanguage } from '@/utils/i18n';
+
+const lang = 'zh';
 
 export async function getStaticPaths() {
-  const notes = (await getCollection('notes')).filter(isPublished);
-  return notes.map((entry) => ({ params: { slug: entry.id }, props: { entry } }));
+  const pathLang = 'zh';
+  const notes = entriesForLanguage((await getCollection('notes')).filter(isPublished), pathLang);
+  return notes.map((entry) => ({ params: { slug: contentSlug(entry) }, props: { entry } }));
 }
 
 const { entry } = Astro.props;
@@ -19,6 +23,7 @@ const { Content, headings } = await render(entry);
   updated={entry.data.updated}
   tags={entry.data.tags}
   headings={headings}
+  lang={lang}
 >
   <Content />
 </ContentLayout>
