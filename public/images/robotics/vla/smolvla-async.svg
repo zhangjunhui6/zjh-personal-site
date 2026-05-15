@@ -1,0 +1,33 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1120" height="620" viewBox="0 0 1120 620" role="img" aria-labelledby="title desc">
+  <title id="title">SmolVLA architecture and asynchronous inference</title>
+  <desc id="desc">A diagram corresponding to SmolVLA Figure 1, Figure 2, Algorithm 1, and Figure 5.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="12" markerHeight="12" refX="9" refY="6" orient="auto"><path d="M2 2 L10 6 L2 10 Z" fill="#2f5d50"/></marker>
+    <style>
+      .bg{fill:#fffdf8}.box{fill:#fff;stroke:#9ab5aa;stroke-width:2;rx:10}.main{fill:#eaf3f0;stroke:#2f5d50;stroke-width:2;rx:14}.queue{fill:#fff4de;stroke:#c9852d;stroke-width:2;rx:10}.text{font:650 22px system-ui,-apple-system,Segoe UI,sans-serif;fill:#1f2a24}.small{font:500 16px system-ui,-apple-system,Segoe UI,sans-serif;fill:#4d5a52}.tiny{font:500 13px system-ui,-apple-system,Segoe UI,sans-serif;fill:#66736c}.line{stroke:#2f5d50;stroke-width:3;fill:none;marker-end:url(#arrow)}.dash{stroke:#c9852d;stroke-width:3;fill:none;stroke-dasharray:8 8;marker-end:url(#arrow)}
+    </style>
+  </defs>
+  <rect class="bg" width="1120" height="620"/>
+  <text x="48" y="54" class="text">SmolVLA: small model plus async control loop</text>
+  <text x="48" y="82" class="small">Self-drawn guide for Figure 1, Figure 2, Algorithm 1, and Figure 5.</text>
+
+  <rect x="54" y="142" width="212" height="108" class="box"/><text x="84" y="180" class="text">Images + state</text><text x="84" y="210" class="small">RGB, task, sensors</text>
+  <rect x="334" y="126" width="230" height="140" class="main"/><text x="368" y="166" class="text">SmolVLM-2</text><text x="368" y="196" class="small">64 visual tokens</text><text x="368" y="224" class="small">first 16 LLM layers</text>
+  <rect x="632" y="126" width="230" height="140" class="main"/><text x="666" y="166" class="text">Action Expert</text><text x="666" y="196" class="small">flow matching</text><text x="666" y="224" class="small">CA + causal SA</text>
+  <rect x="930" y="142" width="140" height="108" class="queue"/><text x="958" y="180" class="text">Chunk</text><text x="958" y="210" class="small">10 flow steps</text>
+
+  <path d="M266 196 C294 196 306 196 334 196" class="line"/>
+  <path d="M564 196 C594 196 604 196 632 196" class="line"/>
+  <path d="M862 196 C894 196 904 196 930 196" class="line"/>
+
+  <rect x="104" y="380" width="230" height="102" class="box"/><text x="138" y="418" class="text">RobotClient</text><text x="138" y="448" class="small">executes queue</text>
+  <rect x="452" y="380" width="230" height="102" class="queue"/><text x="486" y="418" class="text">Action queue</text><text x="486" y="448" class="small">threshold triggers request</text>
+  <rect x="800" y="380" width="230" height="102" class="box"/><text x="834" y="418" class="text">PolicyServer</text><text x="834" y="448" class="small">predicts next chunk</text>
+
+  <path d="M334 430 C374 430 410 430 452 430" class="line"/>
+  <path d="M682 430 C724 430 760 430 800 430" class="dash"/>
+  <path d="M914 380 C896 320 760 292 726 266" class="dash"/>
+  <path d="M930 250 C880 310 672 330 582 380" class="line"/>
+
+  <text x="54" y="556" class="tiny">Key reading point: lower latency comes from decoupling action prediction and execution, not only from having 450M parameters.</text>
+</svg>

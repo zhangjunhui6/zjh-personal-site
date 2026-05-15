@@ -1,0 +1,13 @@
+---
+export function getStaticPaths() {
+  const draftModules = import.meta.glob('../../../../../../docs/drafts/robotics/vla/*.md');
+
+  return Object.keys(draftModules)
+    .filter((path) => !path.endsWith('-en.md'))
+    .map((path) => ({
+      params: { slug: path.split('/').pop()?.replace(/\.md$/, '') },
+    }));
+}
+
+return Astro.redirect(`/drafts/robotics/vla/${Astro.params.slug}/`, 302);
+---

@@ -64,7 +64,9 @@ describe('search entrypoints', () => {
     assert.match(toc, /aria-label=\{text\.tocLabel\}/);
     assert.match(toc, /href=\{`#\$\{heading\.slug\}`\}/);
     assert.match(toc, /toc-link-depth-\$\{heading\.depth\}/);
-    assert.match(notesPage, /const \{ Content, headings \} = await render\(entry\);/);
+    assert.match(notesPage, /const renderedEntry = entry \? await render\(entry\) : undefined;/);
+    assert.match(notesPage, /const Content = renderedEntry\?\.Content;/);
+    assert.match(notesPage, /const headings = renderedEntry\?\.headings \?\? \[\];/);
     assert.match(journalPage, /const \{ Content, headings \} = await render\(entry\);/);
     assert.match(projectsPage, /const \{ Content, headings \} = await render\(entry\);/);
     assert.match(styles, /\.content-shell/);

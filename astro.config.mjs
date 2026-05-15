@@ -15,6 +15,10 @@ export default defineConfig({
   }),
   integrations: [mdx(), sitemap(), react(), markdoc(), keystatic()],
   vite: {
+    // Keystatic admin is a private editing route with a naturally large client bundle.
+    build: {
+      chunkSizeWarningLimit: 3200,
+    },
     plugins: [tailwindcss()],
   },
 });

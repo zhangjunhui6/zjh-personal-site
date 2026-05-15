@@ -1,31 +1,51 @@
 ---
 import { getCollection, render } from 'astro:content';
+import type { CollectionEntry } from 'astro:content';
 import ContentLayout from '@/layouts/ContentLayout.astro';
-import { isPublished } from '@/utils/collections';
+import TopicListLayout from '@/layouts/TopicListLayout.astro';
+import { isPublished, notesByPinnedThenNewest } from '@/utils/collections';
 import { contentSlug, entriesForLanguage } from '@/utils/i18n';
+import { buildNoteTopicDomains } from '@/utils/noteHub';
+import type { NoteTopicDomainView, NoteTopicView } from '@/utils/noteHub';
 
 const lang = 'zh';
 
 export async function getStaticPaths() {
   const pathLang = 'zh';
-  const notes = entriesForLanguage((await getCollection('notes')).filter(isPublished), pathLang);
-  return notes.map((entry) => ({ params: { slug: contentSlug(entry) }, props: { entry } }));
+  const notes = notesByPinnedThenNewest(entriesForLanguage((await getCollection('notes')).filter(isPublished), pathLang));
+  const notePaths = notes.map((entry) => ({ params: { slug: contentSlug(entry) }, props: { entry } }));
+  const topicDomains = buildNoteTopicDomains(notes, pathLang);
+  const topicPaths = topicDomains.flatMap((domain) =>
+    domain.topics.map((topic) => ({ params: { slug: topic.slug }, props: { topic, domain } })),
+  );
+
+  return [...notePaths, ...topicPaths];
 }
 
-const { entry } = Astro.props;
-const { Content, headings } = await render(entry);
+const { entry, topic, domain } = Astro.props as {
+  entry?: CollectionEntry<'notes'>;
+  topic?: NoteTopicView;
+  domain?: NoteTopicDomainView;
+};
+const renderedEntry = entry ? await render(entry) : undefined;
+const Content = renderedEntry?.Content;
+const headings = renderedEntry?.headings ?? [];
 ---
 
-<ContentLayout
-  title={entry.data.title}
-  description={entry.data.description}
-  date={entry.data.date}
-  updated={entry.data.updated}
-  tags={entry.data.tags}
-  headings={headings}
-  lang={lang}
-  cover={entry.data.cover}
-  media={entry.data.media}
->
-  <Content />
-</ContentLayout>
+{entry && Content ? (
+  <ContentLayout
+    title={entry.data.title}
+    description={entry.data.description}
+    date={entry.data.date}
+    updated={entry.data.updated}
+    tags={entry.data.tags}
+    headings={headings}
+    lang={lang}
+    cover={entry.data.cover}
+    media={entry.data.media}
+  >
+    <Content />
+  </ContentLayout>
+) : topic && domain ? (
+  <TopicListLayout topic={topic} domain={domain} lang={lang} />
+) : null}

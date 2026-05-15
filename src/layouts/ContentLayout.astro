@@ -24,6 +24,7 @@ interface Props {
   tags?: string[];
   headings?: Heading[];
   lang?: SiteLanguage;
+  showLanguageToggle?: boolean;
   cover?: string;
   media?: MediaItem[];
   legacyImages?: string[];
@@ -37,6 +38,7 @@ const {
   tags = [],
   headings = [],
   lang = site.defaultLang,
+  showLanguageToggle = true,
   cover,
   media = [],
   legacyImages = [],
@@ -49,7 +51,7 @@ const visibleCover = cover?.trim();
 const mediaItems = normalizeMediaItems(media, legacyImages);
 ---
 
-<BaseLayout title={title} description={description} lang={lang}>
+<BaseLayout title={title} description={description} lang={lang} showLanguageToggle={showLanguageToggle}>
   <article class="container py-12">
     <header class="mb-10 max-w-3xl">
       <time class="mb-3 block text-sm text-[var(--color-muted)]" datetime={date.toISOString()}>{formatDate(date, lang)}</time>

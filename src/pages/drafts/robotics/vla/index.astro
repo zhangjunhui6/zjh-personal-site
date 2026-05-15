@@ -1,0 +1,61 @@
+---
+import BaseLayout from '@/layouts/BaseLayout.astro';
+
+type DraftModule = {
+  frontmatter: {
+    title: string;
+    description: string;
+    lang?: string;
+  };
+};
+
+const draftModules = import.meta.glob<DraftModule>('../../../../../docs/drafts/robotics/vla/*.md');
+const order = [
+  'robot-vla-docker-experiment-roadmap',
+  'robot-vla-vision-language-action-intro',
+  'robot-vla-datasets-lerobot-openx-droid',
+  'robot-vla-lerobot-docker-start',
+  'robot-vla-openvla-policy-notes',
+  'robot-vla-smolvla-first-experiments',
+  'robot-vla-openpi-pi0-flow-matching',
+  'robot-vla-libero-evaluation',
+  'robot-vla-finetuning-lora-post-training',
+  'robot-vla-gr00t-humanoid-system',
+];
+
+const drafts = (
+  await Promise.all(
+    Object.entries(draftModules).map(async ([path, load]) => {
+      const module = await load();
+      const slug = path.split('/').pop()?.replace(/\.md$/, '') ?? '';
+      return { frontmatter: module.frontmatter, slug };
+    }),
+  )
+)
+  .filter((entry) => entry.frontmatter.lang !== 'en')
+  .sort((a, b) => order.indexOf(a.slug) - order.indexOf(b.slug));
+---
+
+<BaseLayout title="机器人 VLA 论文精读草稿" description="VLA 论文精读草稿预览入口。" lang="zh" showLanguageToggle={false}>
+  <section class="container py-12">
+    <p class="mb-2 text-sm font-semibold uppercase tracking-[0.14em] text-[var(--color-leaf)]">草稿预览</p>
+    <h1 class="mb-4 text-4xl font-semibold leading-tight">机器人 VLA 论文精读</h1>
+    <p class="mb-8 max-w-3xl leading-8 text-[var(--color-muted)]">
+      这组文章包含 1 篇路线总览和 9 篇主文，优先讲论文和技术路线；Docker、本机复现、云 GPU 评估会拆成单独实验篇。当前页面从草稿目录读取，方便先看整体阅读效果。
+    </p>
+    <div class="grid gap-4 md:grid-cols-2">
+      {drafts.map((entry, index) => (
+        <a
+          class="group block rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-5 py-5 transition-colors hover:border-[var(--color-leaf)]"
+          href={`/drafts/robotics/vla/${entry.slug}/`}
+        >
+          <span class="text-xs font-semibold text-[var(--color-muted)]">{String(index + 1).padStart(2, '0')}</span>
+          <h2 class="mb-0 mt-2 text-lg font-semibold leading-snug transition-colors group-hover:text-[var(--color-leaf)]">
+            {entry.frontmatter.title}
+          </h2>
+          <p class="mb-0 mt-3 line-clamp-3 text-sm leading-6 text-[var(--color-muted)]">{entry.frontmatter.description}</p>
+        </a>
+      ))}
+    </div>
+  </section>
+</BaseLayout>
