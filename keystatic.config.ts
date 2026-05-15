@@ -157,7 +157,7 @@ export default config({
   collections: {
     notes: collection({
       label: 'Notes',
-      path: 'src/content/notes/*',
+      path: 'src/content/notes/**',
       slugField: 'title',
       entryLayout: 'content',
       format: contentFormat,

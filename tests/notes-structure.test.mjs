@@ -27,6 +27,12 @@ describe('notes directory structure', () => {
     ]);
   });
 
+  it('lets Keystatic manage nested note topic directories', async () => {
+    const config = await source('keystatic.config.ts');
+
+    assert.match(config, /notes:\s*collection\(\{[\s\S]*path:\s*'src\/content\/notes\/\*\*'/);
+  });
+
   it('keeps old flat note URLs as redirects to nested topic URLs', async () => {
     const edgeRedirects = await source('public/_redirects');
     const redirects = await Promise.all([
