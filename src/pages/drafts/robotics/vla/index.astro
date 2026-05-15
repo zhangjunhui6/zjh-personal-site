@@ -49,7 +49,7 @@ const drafts = (
           class="group block rounded-lg border border-[var(--color-line)] bg-[var(--color-surface)] px-5 py-5 transition-colors hover:border-[var(--color-leaf)]"
           href={`/drafts/robotics/vla/${entry.slug}/`}
         >
-          <span class="text-xs font-semibold text-[var(--color-muted)]">{String(index).padStart(2, '0')}</span>
+          <span class="text-xs font-semibold text-[var(--color-muted)]">{String(index + 1).padStart(2, '0')}</span>
           <h2 class="mb-0 mt-2 text-lg font-semibold leading-snug transition-colors group-hover:text-[var(--color-leaf)]">
             {entry.frontmatter.title}
           </h2>
