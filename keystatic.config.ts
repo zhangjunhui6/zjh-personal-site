@@ -1,4 +1,5 @@
 import { collection, config, fields } from '@keystatic/core';
+import { cloudinaryUploadField } from './src/keystatic/cloudinaryUploadField';
 
 const storageMode =
   [
@@ -25,7 +26,35 @@ const langOptions = [
   { label: 'English', value: 'en' },
 ] as const;
 
-const createMediaField = () =>
+const createCoverField = (folder: string) =>
+  cloudinaryUploadField({
+    label: 'Cover',
+    description: 'Paste a media URL, or upload an image directly to Cloudinary.',
+    folder,
+    accept: 'image/*',
+    resourceType: 'image',
+  });
+
+const createMediaSourceField = (folder: string) =>
+  cloudinaryUploadField({
+    label: 'Source',
+    description: 'Paste a media URL, or upload directly to Cloudinary.',
+    validation: { isRequired: true },
+    folder,
+    accept: 'image/*,video/mp4,video/webm',
+    resourceType: 'auto',
+  });
+
+const createJournalImageField = () =>
+  cloudinaryUploadField({
+    label: 'Image',
+    description: 'Legacy journal image URL. New entries should prefer Media.',
+    folder: 'personal-site/journal/images',
+    accept: 'image/*',
+    resourceType: 'image',
+  });
+
+const createMediaField = (folder: string) =>
   fields.array(
     fields.object({
       type: fields.select({
@@ -36,11 +65,7 @@ const createMediaField = () =>
         ],
         defaultValue: 'image',
       }),
-      src: fields.text({
-        label: 'Source',
-        description: 'R2 key, r2:/ key, full URL, or local public path.',
-        validation: { isRequired: true },
-      }),
+      src: createMediaSourceField(folder),
       alt: fields.text({
         label: 'Alt text',
         description: 'Use for images. Keep empty only when the image is decorative.',
@@ -128,8 +153,8 @@ export default config({
           label: 'Pinned',
           defaultValue: false,
         }),
-        cover: fields.text({ label: 'Cover' }),
-        media: createMediaField(),
+        cover: createCoverField('personal-site/notes/covers'),
+        media: createMediaField('personal-site/notes/media'),
       },
     }),
     journal: collection({
@@ -143,11 +168,11 @@ export default config({
         ...baseEntryFields,
         mood: fields.text({ label: 'Mood' }),
         location: fields.text({ label: 'Location' }),
-        images: fields.array(fields.text({ label: 'Image' }), {
+        images: fields.array(createJournalImageField(), {
           label: 'Images',
           itemLabel: (props) => props.value,
         }),
-        media: createMediaField(),
+        media: createMediaField('personal-site/journal/media'),
       },
     }),
     projects: collection({
@@ -204,8 +229,8 @@ export default config({
             itemLabel: (props) => props.fields.label.value,
           },
         ),
-        cover: fields.text({ label: 'Cover' }),
-        media: createMediaField(),
+        cover: createCoverField('personal-site/projects/covers'),
+        media: createMediaField('personal-site/projects/media'),
         featured: fields.checkbox({
           label: 'Featured',
           defaultValue: false,

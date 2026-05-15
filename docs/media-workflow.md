@@ -40,7 +40,29 @@ Keep files small:
 
 Use Cloudinary for files you do not want in Git, larger media experiments, or media that benefits from hosted management. Cloudinary Free does not require a credit card.
 
-Upload media in Cloudinary, copy the public delivery URL, then paste the full URL into Keystatic `Source`, `Cover`, or `Video poster`.
+The preferred workflow is to upload directly inside Keystatic. `Cover`, `Media` source fields, and legacy Journal `Images` fields show an upload button next to the URL input. The browser uploads the file directly to Cloudinary after the site API creates a signed upload request.
+
+Configure these variables locally and in Cloudflare Pages:
+
+```text
+CLOUDINARY_CLOUD_NAME=<cloud-name>
+CLOUDINARY_API_KEY=<api-key>
+CLOUDINARY_API_SECRET=<api-secret>
+MEDIA_UPLOAD_TOKEN=<private editor upload token>
+```
+
+The `MEDIA_UPLOAD_TOKEN` is a private shared token for the editor UI. Enter it once in the Keystatic upload field; it is saved in the browser's local storage and sent only to the same-origin signature endpoint.
+
+The upload flow is:
+
+```text
+Keystatic upload button
+  -> /api/media/cloudinary-signature
+  -> browser direct upload to Cloudinary
+  -> secure_url is written back into the content field
+```
+
+Manual Cloudinary uploads still work as a fallback: copy the public delivery URL and paste the full URL into Keystatic `Source`, `Cover`, or `Video poster`.
 
 Examples:
 
@@ -82,7 +104,7 @@ Use `Cover` for the primary image on Notes and Projects.
 Use `Media` for galleries or videos:
 
 - `Type`: `Image` or `Video`.
-- `Source`: local public path, Cloudinary URL, R2 key, or `r2:/` key.
+- `Source`: local public path, Cloudinary URL, R2 key, `r2:/` key, or an uploaded Cloudinary asset.
 - `Alt text`: image alt text.
 - `Caption`: visible caption below the media.
 - `Video poster`: poster image for video items.

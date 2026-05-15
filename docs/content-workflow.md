@@ -128,7 +128,7 @@ slug 一旦公开后尽量稳定。标题如果只是润色，优先不要改 sl
 
 - `Updated`：内容有实质更新时填写。
 - `Pinned`：只影响 `/notes/` 列表置顶，不影响标签页和归档页排序。
-- `Cover`：详情页封面图。可以填写 `/images/...` 本地路径、Cloudinary 完整 URL，或以后启用的 R2 key。
+- `Cover`：详情页封面图。可以填写 `/images/...` 本地路径、Cloudinary 完整 URL，或以后启用的 R2 key。启用 Cloudinary 环境变量后，也可以在 Keystatic 字段里直接上传图片。
 - `Media`：详情页正文后的图片或短视频列表。第一版优先用 `public/` 本地文件或 Cloudinary URL。
 
 ## Journal 专属字段
@@ -168,6 +168,8 @@ public/videos/projects/<slug>/demo-poster.webp
 - `/images/robotics/vla/openvla-architecture.svg`
 
 以后如果启用 R2，也可以填写 `images/notes/demo/cover.webp` 或 `r2:/videos/projects/demo/demo.mp4`，并通过 `PUBLIC_MEDIA_BASE_URL` 解析。
+
+Cloudinary 推荐工作流是在 Keystatic 的 `Cover` 或 `Media > Source` 字段里点击上传。浏览器会直接上传到 Cloudinary，上传成功后字段会自动写入 `secure_url`。
 
 短视频只使用已经压缩好的 `.mp4` 或 `.webm`，并尽量填写 `Video poster`。长视频优先放到视频平台或 Cloudinary，不建议进仓库。
 
