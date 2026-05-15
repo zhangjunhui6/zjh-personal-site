@@ -1,0 +1,21 @@
+---
+import { resolveMediaSrc } from '@/utils/media';
+
+interface Props {
+  src: string;
+  alt?: string;
+  caption?: string;
+  title?: string;
+}
+
+const { src, alt = '', caption, title } = Astro.props;
+const resolvedSrc = resolveMediaSrc(src);
+const altText = alt || title || caption || '';
+---
+
+{resolvedSrc && (
+  <figure class="media-figure">
+    <img src={resolvedSrc} alt={altText} loading="lazy" decoding="async" />
+    {caption && <figcaption>{caption}</figcaption>}
+  </figure>
+)}

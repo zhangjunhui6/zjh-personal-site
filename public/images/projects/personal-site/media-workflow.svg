@@ -1,0 +1,58 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="675" viewBox="0 0 1200 675" role="img" aria-labelledby="title desc">
+  <title id="title">Personal site media workflow</title>
+  <desc id="desc">Local static media and Cloudinary URLs flow through Keystatic fields into Astro media components.</desc>
+  <defs>
+    <style>
+      .bg { fill: #fffdf8; }
+      .panel { fill: #faf7f0; stroke: #e5ded2; stroke-width: 2; }
+      .primary { fill: #2f5d50; }
+      .accent { fill: #a95134; }
+      .soft { fill: #dce9ef; }
+      .ink { fill: #1f2a24; font-family: Inter, Arial, sans-serif; }
+      .title { font-size: 38px; font-weight: 700; }
+      .label { font-size: 25px; font-weight: 700; }
+      .text { font-size: 20px; }
+      .small { font-size: 17px; fill: #68756f; }
+      .line { fill: none; stroke: #2f5d50; stroke-width: 4; stroke-linecap: round; stroke-linejoin: round; }
+    </style>
+  </defs>
+  <rect width="1200" height="675" class="bg"/>
+  <text x="70" y="82" class="ink title">Media stays simple until it needs to grow</text>
+  <text x="72" y="124" class="ink small">Local files first, Cloudinary when files should stay out of Git, R2 later if billing is ready.</text>
+
+  <rect x="70" y="178" width="280" height="184" rx="8" class="panel"/>
+  <rect x="100" y="212" width="62" height="62" rx="8" class="soft"/>
+  <path d="M116 252l19-22 15 17 9-10 19 25H116z" class="primary"/>
+  <text x="100" y="314" class="ink label">Local static</text>
+  <text x="100" y="344" class="ink small">/public/images</text>
+
+  <rect x="70" y="402" width="280" height="132" rx="8" class="panel"/>
+  <circle cx="132" cy="466" r="32" class="accent"/>
+  <text x="100" y="501" class="ink label">Cloudinary</text>
+  <text x="100" y="531" class="ink small">full delivery URLs</text>
+
+  <path d="M372 270h115" class="line"/>
+  <path d="M472 255l20 15-20 15" class="line"/>
+  <path d="M372 468h115" class="line"/>
+  <path d="M472 453l20 15-20 15" class="line"/>
+
+  <rect x="515" y="244" width="250" height="184" rx="8" class="panel"/>
+  <rect x="548" y="280" width="182" height="42" rx="6" class="primary"/>
+  <rect x="548" y="338" width="182" height="42" rx="6" class="soft"/>
+  <text x="568" y="308" class="bg text">Cover</text>
+  <text x="568" y="366" class="ink text">Media[]</text>
+  <text x="548" y="411" class="ink label">Keystatic fields</text>
+
+  <path d="M787 336h115" class="line"/>
+  <path d="M887 321l20 15-20 15" class="line"/>
+
+  <rect x="930" y="244" width="220" height="184" rx="8" class="panel"/>
+  <path d="M986 288h108v92H986z" class="soft"/>
+  <path d="M1006 354l25-30 18 22 11-14 25 32h-79z" class="primary"/>
+  <circle cx="1066" cy="312" r="12" class="accent"/>
+  <text x="970" y="411" class="ink label">Astro renders</text>
+
+  <rect x="515" y="484" width="635" height="82" rx="8" fill="#fffdf8" stroke="#e5ded2" stroke-width="2"/>
+  <text x="548" y="520" class="ink text">Future R2 path remains compatible:</text>
+  <text x="548" y="550" class="ink small">images/projects/personal-site/demo.webp + PUBLIC_MEDIA_BASE_URL</text>
+</svg>

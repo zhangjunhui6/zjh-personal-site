@@ -1,0 +1,30 @@
+---
+import { mediaMimeType, resolveMediaSrc } from '@/utils/media';
+
+interface Props {
+  src: string;
+  poster?: string;
+  caption?: string;
+  title?: string;
+}
+
+const { src, poster, caption, title } = Astro.props;
+const resolvedSrc = resolveMediaSrc(src);
+const resolvedPoster = poster ? resolveMediaSrc(poster) : undefined;
+const mimeType = mediaMimeType(src);
+---
+
+{resolvedSrc && (
+  <figure class="media-figure">
+    <video
+      controls
+      playsinline
+      preload="metadata"
+      poster={resolvedPoster}
+      aria-label={title || caption || undefined}
+    >
+      <source src={resolvedSrc} type={mimeType} />
+    </video>
+    {caption && <figcaption>{caption}</figcaption>}
+  </figure>
+)}

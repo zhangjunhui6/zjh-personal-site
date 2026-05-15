@@ -25,6 +25,45 @@ const langOptions = [
   { label: 'English', value: 'en' },
 ] as const;
 
+const createMediaField = () =>
+  fields.array(
+    fields.object({
+      type: fields.select({
+        label: 'Type',
+        options: [
+          { label: 'Image', value: 'image' },
+          { label: 'Video', value: 'video' },
+        ],
+        defaultValue: 'image',
+      }),
+      src: fields.text({
+        label: 'Source',
+        description: 'R2 key, r2:/ key, full URL, or local public path.',
+        validation: { isRequired: true },
+      }),
+      alt: fields.text({
+        label: 'Alt text',
+        description: 'Use for images. Keep empty only when the image is decorative.',
+      }),
+      caption: fields.text({
+        label: 'Caption',
+        multiline: true,
+      }),
+      poster: fields.text({
+        label: 'Video poster',
+        description: 'Optional image shown before video playback.',
+      }),
+      title: fields.text({
+        label: 'Title',
+        description: 'Optional accessible label for videos or media management.',
+      }),
+    }),
+    {
+      label: 'Media',
+      itemLabel: (props) => props.fields.src.value || props.fields.title.value || 'Media item',
+    },
+  );
+
 const baseEntryFields = {
   title: fields.slug({
     name: {
@@ -90,6 +129,7 @@ export default config({
           defaultValue: false,
         }),
         cover: fields.text({ label: 'Cover' }),
+        media: createMediaField(),
       },
     }),
     journal: collection({
@@ -107,6 +147,7 @@ export default config({
           label: 'Images',
           itemLabel: (props) => props.value,
         }),
+        media: createMediaField(),
       },
     }),
     projects: collection({
@@ -164,6 +205,7 @@ export default config({
           },
         ),
         cover: fields.text({ label: 'Cover' }),
+        media: createMediaField(),
         featured: fields.checkbox({
           label: 'Featured',
           defaultValue: false,

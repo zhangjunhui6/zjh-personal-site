@@ -16,6 +16,15 @@ const { entry } = Astro.props;
 const { Content, headings } = await render(entry);
 ---
 
-<ContentLayout title={entry.data.title} description={entry.data.description} date={entry.data.date} tags={entry.data.tags} headings={headings} lang={lang}>
+<ContentLayout
+  title={entry.data.title}
+  description={entry.data.description}
+  date={entry.data.date}
+  tags={entry.data.tags}
+  headings={headings}
+  lang={lang}
+  media={entry.data.media}
+  legacyImages={entry.data.images}
+>
   <Content />
 </ContentLayout>

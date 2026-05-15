@@ -10,6 +10,8 @@ date: YYYY-MM-DD
 tags: [开发流程, 工具]
 lang: zh
 draft: true
+cover:
+media: []
 ---
 
 开头先说明背景、问题和文章边界。不要一上来堆命令，先告诉读者为什么这件事重要。

@@ -1,0 +1,24 @@
+---
+import MediaImage from '@/components/MediaImage.astro';
+import MediaVideo from '@/components/MediaVideo.astro';
+import type { MediaItem } from '@/utils/media';
+
+interface Props {
+  media?: MediaItem[];
+}
+
+const { media = [] } = Astro.props;
+const visibleMedia = media.filter((item) => item.src.trim());
+---
+
+{visibleMedia.length > 0 && (
+  <section class="media-gallery" aria-label="Media">
+    {visibleMedia.map((item) =>
+      item.type === 'video' ? (
+        <MediaVideo src={item.src} poster={item.poster} caption={item.caption} title={item.title} />
+      ) : (
+        <MediaImage src={item.src} alt={item.alt} caption={item.caption} title={item.title} />
+      ),
+    )}
+  </section>
+)}

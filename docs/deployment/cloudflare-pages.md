@@ -14,6 +14,7 @@ Cloudflare Pages settings:
 - Build output directory: `dist`
 - Build system version: v3
 - Environment variable: `NODE_VERSION=22.16.0`
+- Optional environment variable: `PUBLIC_MEDIA_BASE_URL` for a future public R2 media domain, only if R2 media keys are used.
 
 Production URL:
 
@@ -28,6 +29,20 @@ The project currently uses Astro 5 and pins Vite to `6.4.2` because `@keystatic/
 Astro uses `output: 'static'` with the Cloudflare adapter. Public content pages remain prerendered, while Keystatic admin and API routes are emitted as Cloudflare Pages Functions. The adapter sets `imageService: 'compile'` so prerendered pages can optimize images at build time without requiring Sharp in the Cloudflare runtime.
 
 Keystatic storage mode is controlled by `PUBLIC_KEYSTATIC_STORAGE`, with `KEYSTATIC_STORAGE` retained as a server-side compatibility fallback. Set both to `github` in Cloudflare Pages production.
+
+## Media
+
+The site can render local static media from `/public`, full hosted media URLs such as Cloudinary delivery URLs, and optional R2 keys.
+
+Local files and full URLs do not require extra Cloudflare Pages variables. If R2 is enabled later, configure `PUBLIC_MEDIA_BASE_URL` to the public R2 custom domain, for example:
+
+```text
+https://media.example.com
+```
+
+Content fields may use full URLs, local `/images/...` or `/videos/...` public paths, or R2 object keys such as `images/notes/demo/cover.webp`. R2 keys are resolved against `PUBLIC_MEDIA_BASE_URL`; full URLs and local public paths are left unchanged.
+
+See `docs/media-workflow.md` for the local, Cloudinary, and optional R2 workflow.
 
 ## Keystatic Admin
 

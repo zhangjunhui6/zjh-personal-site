@@ -5,6 +5,12 @@ date: 2026-05-12
 status: active
 stack: [Astro, TypeScript, Tailwind CSS, Keystatic, Cloudflare Pages]
 links: []
+cover: /images/projects/personal-site/media-workflow.svg
+media:
+  - type: image
+    src: /images/projects/personal-site/media-source-options.svg
+    alt: 个人网站无卡媒体来源选项示意图
+    caption: 当前推荐的小媒体走 public 静态路径，需要在线托管的媒体走 Cloudinary 完整 URL。
 featured: true
 lang: zh
 translationKey: personal-site

@@ -1,0 +1,40 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="520" viewBox="0 0 1200 520" role="img" aria-labelledby="title desc">
+  <title id="title">Media source options</title>
+  <desc id="desc">Two supported media source options: local public files and full Cloudinary URLs.</desc>
+  <defs>
+    <style>
+      .bg { fill: #fffdf8; }
+      .card { fill: #faf7f0; stroke: #e5ded2; stroke-width: 2; }
+      .ink { fill: #1f2a24; font-family: Inter, Arial, sans-serif; }
+      .muted { fill: #68756f; font-family: Inter, Arial, sans-serif; }
+      .title { font-size: 34px; font-weight: 700; }
+      .label { font-size: 28px; font-weight: 700; }
+      .text { font-size: 21px; }
+      .code { font-size: 18px; font-family: SFMono-Regular, Menlo, Consolas, monospace; }
+      .green { fill: #2f5d50; }
+      .clay { fill: #a95134; }
+      .sky { fill: #dce9ef; }
+    </style>
+  </defs>
+  <rect width="1200" height="520" class="bg"/>
+  <text x="70" y="76" class="ink title">Two no-card media paths</text>
+  <text x="72" y="114" class="muted text">Keep the content model the same. Only the Source value changes.</text>
+
+  <rect x="70" y="170" width="500" height="250" rx="8" class="card"/>
+  <rect x="112" y="215" width="84" height="84" rx="8" class="sky"/>
+  <path d="M132 270l26-31 20 24 10-13 27 35h-83z" class="green"/>
+  <text x="230" y="232" class="ink label">Local public files</text>
+  <text x="230" y="272" class="muted text">Best for small images and short demos.</text>
+  <text x="112" y="360" class="green code">/images/notes/demo/cover.webp</text>
+  <text x="112" y="392" class="green code">/videos/projects/demo.mp4</text>
+
+  <rect x="630" y="170" width="500" height="250" rx="8" class="card"/>
+  <circle cx="155" cy="257" r="1" fill="none"/>
+  <circle cx="714" cy="257" r="42" class="clay"/>
+  <path d="M690 257c18-26 54-26 72 0-18 26-54 26-72 0z" class="bg"/>
+  <circle cx="726" cy="257" r="13" class="green"/>
+  <text x="790" y="232" class="ink label">Cloudinary URLs</text>
+  <text x="790" y="272" class="muted text">Best when media should stay out of Git.</text>
+  <text x="672" y="360" class="green code">https://res.cloudinary.com/...</text>
+  <text x="672" y="392" class="green code">image/upload/.../cover.webp</text>
+</svg>

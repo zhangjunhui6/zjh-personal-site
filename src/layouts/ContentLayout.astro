@@ -1,9 +1,13 @@
 ---
 import BaseLayout from '@/layouts/BaseLayout.astro';
+import MediaGallery from '@/components/MediaGallery.astro';
+import MediaImage from '@/components/MediaImage.astro';
 import TableOfContents from '@/components/TableOfContents.astro';
 import { site } from '@/config/site';
 import type { SiteLanguage } from '@/config/site';
 import { formatDate } from '@/utils/dates';
+import { normalizeMediaItems } from '@/utils/media';
+import type { MediaItem } from '@/utils/media';
 import { tagHref } from '@/utils/taxonomy';
 
 interface Heading {
@@ -20,13 +24,29 @@ interface Props {
   tags?: string[];
   headings?: Heading[];
   lang?: SiteLanguage;
+  cover?: string;
+  media?: MediaItem[];
+  legacyImages?: string[];
 }
 
-const { title, description, date, updated, tags = [], headings = [], lang = site.defaultLang } = Astro.props;
+const {
+  title,
+  description,
+  date,
+  updated,
+  tags = [],
+  headings = [],
+  lang = site.defaultLang,
+  cover,
+  media = [],
+  legacyImages = [],
+} = Astro.props;
 const visibleTags = tags.map((tag) => tag.trim()).filter(Boolean);
 const visibleHeadings = headings.filter((heading) => heading.depth >= 2 && heading.depth <= 3 && heading.slug && heading.text);
 const showTableOfContents = visibleHeadings.length >= 2;
 const updatedLabel = lang === 'en' ? 'Updated' : '更新于';
+const visibleCover = cover?.trim();
+const mediaItems = normalizeMediaItems(media, legacyImages);
 ---
 
 <BaseLayout title={title} description={description} lang={lang}>
@@ -51,11 +71,17 @@ const updatedLabel = lang === 'en' ? 'Updated' : '更新于';
         </div>
       )}
     </header>
+    {visibleCover && (
+      <div class="content-cover">
+        <MediaImage src={visibleCover} alt={title} />
+      </div>
+    )}
     <div class:list={['content-shell', showTableOfContents && 'content-shell-with-toc']}>
       <div class="content-main">
         <div class="prose">
           <slot />
         </div>
+        <MediaGallery media={mediaItems} />
       </div>
       {showTableOfContents && <TableOfContents headings={visibleHeadings} lang={lang} />}
     </div>
