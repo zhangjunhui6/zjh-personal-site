@@ -24,6 +24,24 @@ GR00T 系列把 VLA 问题推到人形机器人尺度。桌面机械臂通常关
 
 这篇文章以 GR00T N1 论文为主，结合 NVIDIA 后续公开资料理解系统路线。
 
+## 先抓思想：人形 VLA 不是桌面机械臂的放大版
+
+GR00T 的精髓不是“更大的 VLA 模型”，而是把 VLA 问题推进到 humanoid system：
+
+> 人形机器人需要在更高维、更长程、更安全敏感的身体系统里，把视觉语言理解转成连续动作。
+
+这会改变论文的阅读方式。OpenVLA 可以重点看 action token，π0 可以重点看 action expert；GR00T 必须同时看 dual-system、embodiment-specific adapters、数据生成、低层控制和部署边界。
+
+| 层级 | GR00T N1 的回答 | 为什么重要 |
+| --- | --- | --- |
+| 思想矛盾 | 人形机器人任务更长程、动作更高维、embodiment 差异更大 | VLA 必须成为系统 stack，而不只是 policy 网络 |
+| 核心创新 | System 2 VLM 负责语义，System 1 DiT / flow policy 负责连续动作 | 把慢速语义推理和快速动作生成分开 |
+| 架构结果 | Eagle-2 VLM、embodiment-specific state/action encoder-decoder、shared DiT policy | 显式处理不同机器人身体接口 |
+| 证据重点 | 多 embodiment、真机/仿真/合成数据、bimanual manipulation 和部署延迟 | 判断它是否只是仿真概念，还是接近 humanoid deployment |
+| 局限 | 安全、低层控制、硬件差异、数据质量和版本/授权边界 | 解释为什么不能把 GR00T 当作一个普通 checkpoint 教程 |
+
+所以读 GR00T 时，要先接受一个前提：这是一篇人形机器人系统路线论文，模型结构只是系统中的一层。
+
 ## 本篇读完要形成的系统地图
 
 读 GR00T 不能只看模型名。更稳的读法是把它拆成一个 humanoid robot stack：

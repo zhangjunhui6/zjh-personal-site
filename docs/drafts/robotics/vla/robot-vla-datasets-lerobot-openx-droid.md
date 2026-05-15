@@ -24,6 +24,22 @@ draft: true
 
 这一篇重点读三类东西：Open X-Embodiment 的跨机器人数据思想，DROID 的真实世界采集思想，以及 LeRobotDataset 这种工具格式为什么对复现重要。
 
+## 先抓思想：VLA 的能力边界先由数据定义
+
+数据集论文的精髓不是“规模又变大了”，而是回答一个更基础的问题：
+
+> 一个 VLA 模型能不能泛化，首先取决于机器人经验是否覆盖了目标身体、目标场景、目标任务和目标动作空间。
+
+Open X-Embodiment、DROID 和 LeRobotDataset 分别解决三个不同层面的数据瓶颈。
+
+| 对象 | 思想矛盾 | 核心创新 | 对 VLA 的意义 |
+| --- | --- | --- | --- |
+| Open X-Embodiment | 单机器人数据太窄，难以学到通用策略 | 汇集多机构、多机器人、多任务数据并训练 RT-X | 研究跨 embodiment 数据混合是否有正迁移 |
+| DROID | 实验室数据太干净，真实世界场景覆盖不足 | 用统一 Franka 平台在多地点采集 in-the-wild data | 放大 scene diversity，逼近真实部署分布 |
+| LeRobotDataset | 论文数据难以复现、检查和复用 | 用统一 schema、metadata、stats、shards 表示机器人 episode | 把数据论文变成可加载、可训练、可评估的接口 |
+
+所以读数据集论文时，不要只看 trajectory 数量。更重要的是问：这个数据解决的是 embodiment diversity、scene diversity，还是 reproducibility interface？
+
 ## 本篇读完要形成的论文地图
 
 数据集论文不要只记“规模有多大”。更有用的读法是判断它解决了哪一种数据瓶颈：

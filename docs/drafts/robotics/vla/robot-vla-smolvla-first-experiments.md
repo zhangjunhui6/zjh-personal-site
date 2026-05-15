@@ -26,6 +26,24 @@ SmolVLA 的意义就在这里。它让我们从论文角度重新问一个问题
 
 > VLA 一定要很大才有用吗？
 
+## 先抓思想：低成本不是模型变小，而是闭环变便宜
+
+SmolVLA 的精髓不是“做了一个小号 VLA”，而是提出另一个 VLA 研究命题：
+
+> 如果 VLA 要成为社区可研究、可复现、可部署的机器人技术，它必须同时降低模型成本、数据成本和闭环推理成本。
+
+所以 SmolVLA 不能只看参数量。它的创新点是一组组合拳：小型 VLM、flow-matching action expert、社区 LeRobot 数据、异步 policy server / robot client。每一项都在降低 VLA 的实验门槛。
+
+| 层级 | SmolVLA 的回答 | 为什么重要 |
+| --- | --- | --- |
+| 思想矛盾 | 大 VLA 能力强，但训练、推理和机器人闭环太贵 | 把 affordable / efficient 作为论文主问题 |
+| 核心创新 | 小模型 + 连续 action expert + community datasets + async inference | 低成本来自模型、数据、系统三层，而不是单一压缩 |
+| 架构结果 | SmolVLM-2 提供上下文，action expert 生成 action chunk，队列异步执行 | 架构和部署策略一起服务于实时控制 |
+| 证据重点 | LIBERO / Meta-World / SO100 / SO101、异步推理 Figure 5、ablation tables | 判断低成本是否牺牲成功率、延迟和稳定性 |
+| 局限 | 社区数据噪声、schema 统一、复杂语言能力和真实部署边界 | 解释为什么它适合学习和迭代，但不等于本机能硬跑所有 VLA |
+
+这样读 SmolVLA，才不会把它误读成“OpenVLA 的轻量版”。它更像是在问：VLA 如何进入个人研究者和小团队也能反复试错的阶段。
+
 ## 本篇读完要形成的论文地图
 
 SmolVLA 的阅读重点不是“它能不能在我的电脑上跑”，而是低成本到底来自哪里。可以拆成三层：
