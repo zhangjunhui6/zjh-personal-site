@@ -254,6 +254,45 @@ a:hover {
   color: var(--color-muted);
 }
 
+.content-cover {
+  max-width: 760px;
+  margin: 0 0 2rem;
+}
+
+.media-gallery {
+  display: grid;
+  max-width: 760px;
+  gap: 1rem;
+  margin: 2rem 0;
+}
+
+.media-figure {
+  margin: 0;
+}
+
+.media-figure img,
+.media-figure video {
+  display: block;
+  width: 100%;
+  height: auto;
+  border: 1px solid var(--color-line);
+  border-radius: 8px;
+  background: #fffdf8;
+  box-shadow: 0 14px 34px rgba(31, 42, 36, 0.08);
+}
+
+.media-figure video {
+  aspect-ratio: 16 / 9;
+  object-fit: contain;
+}
+
+.media-figure figcaption {
+  margin-top: 0.55rem;
+  color: var(--color-muted);
+  font-size: 0.9rem;
+  line-height: 1.6;
+}
+
 .quiet-card {
   border: 1px solid var(--color-line);
   border-radius: 8px;

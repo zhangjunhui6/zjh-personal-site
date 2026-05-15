@@ -24,6 +24,8 @@ const { Content, headings } = await render(entry);
   tags={entry.data.tags}
   headings={headings}
   lang={lang}
+  cover={entry.data.cover}
+  media={entry.data.media}
 >
   <Content />
 </ContentLayout>

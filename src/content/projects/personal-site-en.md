@@ -5,6 +5,12 @@ date: 2026-05-12
 status: active
 stack: [Astro, TypeScript, Tailwind CSS, Keystatic, Cloudflare Pages]
 links: []
+cover: /images/projects/personal-site/media-workflow.svg
+media:
+  - type: image
+    src: /images/projects/personal-site/media-source-options.svg
+    alt: No-card media source options for the personal site
+    caption: Small media can use public static paths, while hosted media can use full Cloudinary delivery URLs.
 featured: true
 lang: en
 translationKey: personal-site

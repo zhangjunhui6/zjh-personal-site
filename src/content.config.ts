@@ -12,6 +12,15 @@ const baseEntry = {
   draft: z.boolean().default(false),
 };
 
+const mediaItem = z.object({
+  type: z.enum(['image', 'video']).default('image'),
+  src: z.string(),
+  alt: z.string().optional(),
+  caption: z.string().optional(),
+  poster: z.string().optional(),
+  title: z.string().optional(),
+});
+
 const notes = defineCollection({
   loader: glob({ base: './src/content/notes', pattern: '**/*.{md,mdx}' }),
   schema: z.object({
@@ -19,6 +28,7 @@ const notes = defineCollection({
     updated: z.coerce.date().optional(),
     pinned: z.boolean().default(false),
     cover: z.string().optional(),
+    media: z.array(mediaItem).default([]),
   }),
 });
 
@@ -29,6 +39,7 @@ const journal = defineCollection({
     mood: z.string().optional(),
     location: z.string().optional(),
     images: z.array(z.string()).default([]),
+    media: z.array(mediaItem).default([]),
   }),
 });
 
@@ -49,6 +60,7 @@ const projects = defineCollection({
       )
       .default([]),
     cover: z.string().optional(),
+    media: z.array(mediaItem).default([]),
     featured: z.boolean().default(false),
     lang: z.enum(['zh', 'en']).default('zh'),
     translationKey: z.string().optional(),

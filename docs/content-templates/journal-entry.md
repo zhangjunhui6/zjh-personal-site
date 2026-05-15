@@ -13,6 +13,7 @@ draft: true
 mood:
 location:
 images: []
+media: []
 ---
 
 用一段话进入现场：时间、地点、状态或一个细节。

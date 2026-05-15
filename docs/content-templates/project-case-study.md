@@ -10,6 +10,8 @@ date: YYYY-MM-DD
 status: active
 stack: [Astro, TypeScript]
 links: []
+cover:
+media: []
 featured: false
 lang: zh
 draft: true
