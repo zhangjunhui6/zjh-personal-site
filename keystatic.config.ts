@@ -1,5 +1,5 @@
 import { collection, config, fields } from '@keystatic/core';
-import { cloudinaryUploadField } from './src/keystatic/cloudinaryUploadField';
+import { repoMediaField, repoMediaValueLabel } from './src/keystatic/repoMediaField';
 
 const storageMode =
   [
@@ -26,35 +26,54 @@ const langOptions = [
   { label: 'English', value: 'en' },
 ] as const;
 
-const createCoverField = (folder: string) =>
-  cloudinaryUploadField({
-    label: 'Cover',
-    description: 'Paste a media URL, or upload an image directly to Cloudinary.',
-    folder,
-    accept: 'image/*',
-    resourceType: 'image',
+const createMediaUploadField = (
+  collectionName: 'journal' | 'notes' | 'projects',
+  options: {
+    label: string;
+    description: string;
+    accept: string;
+    isRequired?: boolean;
+  },
+) =>
+  repoMediaField({
+    label: options.label,
+    description: options.description,
+    validation: options.isRequired ? { isRequired: true } : undefined,
+    directory: `public/media/${collectionName}`,
+    publicPath: `/media/${collectionName}`,
+    accept: options.accept,
   });
 
-const createMediaSourceField = (folder: string) =>
-  cloudinaryUploadField({
+const createCoverField = (collectionName: 'notes' | 'projects') =>
+  createMediaUploadField(collectionName, {
+    label: 'Cover',
+    description: 'Paste a media URL, or choose an image to save with this entry.',
+    accept: 'image/*',
+  });
+
+const createMediaSourceField = (collectionName: 'journal' | 'notes' | 'projects') =>
+  createMediaUploadField(collectionName, {
     label: 'Source',
-    description: 'Paste a media URL, or upload directly to Cloudinary.',
-    validation: { isRequired: true },
-    folder,
+    description: 'Paste a media URL, or choose an image/video to save with this entry.',
+    isRequired: true,
     accept: 'image/*,video/mp4,video/webm',
-    resourceType: 'auto',
+  });
+
+const createMediaPosterField = (collectionName: 'journal' | 'notes' | 'projects') =>
+  createMediaUploadField(collectionName, {
+    label: 'Video poster',
+    description: 'Optional image shown before video playback.',
+    accept: 'image/*',
   });
 
 const createJournalImageField = () =>
-  cloudinaryUploadField({
+  createMediaUploadField('journal', {
     label: 'Image',
     description: 'Legacy journal image URL. New entries should prefer Media.',
-    folder: 'personal-site/journal/images',
     accept: 'image/*',
-    resourceType: 'image',
   });
 
-const createMediaField = (folder: string) =>
+const createMediaField = (collectionName: 'journal' | 'notes' | 'projects') =>
   fields.array(
     fields.object({
       type: fields.select({
@@ -65,7 +84,7 @@ const createMediaField = (folder: string) =>
         ],
         defaultValue: 'image',
       }),
-      src: createMediaSourceField(folder),
+      src: createMediaSourceField(collectionName),
       alt: fields.text({
         label: 'Alt text',
         description: 'Use for images. Keep empty only when the image is decorative.',
@@ -74,10 +93,7 @@ const createMediaField = (folder: string) =>
         label: 'Caption',
         multiline: true,
       }),
-      poster: fields.text({
-        label: 'Video poster',
-        description: 'Optional image shown before video playback.',
-      }),
+      poster: createMediaPosterField(collectionName),
       title: fields.text({
         label: 'Title',
         description: 'Optional accessible label for videos or media management.',
@@ -85,7 +101,7 @@ const createMediaField = (folder: string) =>
     }),
     {
       label: 'Media',
-      itemLabel: (props) => props.fields.src.value || props.fields.title.value || 'Media item',
+      itemLabel: (props) => repoMediaValueLabel(props.fields.src.value) || props.fields.title.value || 'Media item',
     },
   );
 
@@ -153,8 +169,8 @@ export default config({
           label: 'Pinned',
           defaultValue: false,
         }),
-        cover: createCoverField('personal-site/notes/covers'),
-        media: createMediaField('personal-site/notes/media'),
+        cover: createCoverField('notes'),
+        media: createMediaField('notes'),
       },
     }),
     journal: collection({
@@ -170,9 +186,9 @@ export default config({
         location: fields.text({ label: 'Location' }),
         images: fields.array(createJournalImageField(), {
           label: 'Images',
-          itemLabel: (props) => props.value,
+          itemLabel: (props) => repoMediaValueLabel(props.value),
         }),
-        media: createMediaField('personal-site/journal/media'),
+        media: createMediaField('journal'),
       },
     }),
     projects: collection({
@@ -229,8 +245,8 @@ export default config({
             itemLabel: (props) => props.fields.label.value,
           },
         ),
-        cover: createCoverField('personal-site/projects/covers'),
-        media: createMediaField('personal-site/projects/media'),
+        cover: createCoverField('projects'),
+        media: createMediaField('projects'),
         featured: fields.checkbox({
           label: 'Featured',
           defaultValue: false,

@@ -2,13 +2,41 @@
 
 This site supports three media source styles in `Cover`, `Media`, and legacy Journal `Images` fields:
 
+- Editor-uploaded repository media: `/media/...`.
 - Local static paths: `/images/...` and `/videos/...`.
 - Full hosted URLs: Cloudinary, YouTube poster images, or any public CDN URL.
 - Future R2 keys: `images/...` or `r2:/images/...` resolved through `PUBLIC_MEDIA_BASE_URL`.
 
-The current default is local static files plus Cloudinary Free. R2 is optional and can wait until Cloudflare billing is available.
+The current default is Keystatic editor upload into `public/media`. R2 is optional and can wait until Cloudflare billing is available.
 
-## Option 1: Local Static Files
+## Option 1: Keystatic Editor Uploads
+
+Use the `Choose file` button in Keystatic for normal images and short videos. Keystatic saves the selected file into the GitHub repository, writes the generated `/media/...` path into frontmatter, and Cloudflare Pages redeploys the site from `main`.
+
+Generated paths follow this shape:
+
+```text
+public/media/notes/<slug>/cover.webp
+public/media/notes/<slug>/media/0/src.webp
+public/media/journal/<slug>/images/0.webp
+public/media/projects/<slug>/media/0/src.mp4
+public/media/projects/<slug>/media/0/poster.webp
+```
+
+The saved field values look like this:
+
+```text
+/media/notes/<slug>/cover.webp
+/media/projects/<slug>/media/0/src.mp4
+```
+
+Keep files small:
+
+- Images: prefer `.webp`, `.avif`, `.jpg`, or `.png`.
+- Videos: prefer compressed `.mp4` or `.webm`.
+- This path is best for personal-site media, diagrams, screenshots, and short demos.
+
+## Option 2: Local Static Files
 
 Use local files for images, diagrams, and short demo videos that are safe to keep in the repository.
 
@@ -36,33 +64,9 @@ Keep files small:
 - Videos: prefer compressed `.mp4` or `.webm`.
 - Cloudflare Pages has a per-asset size limit, so local videos should stay short.
 
-## Option 2: Cloudinary Free
+## Option 3: Cloudinary Free URLs
 
-Use Cloudinary for files you do not want in Git, larger media experiments, or media that benefits from hosted management. Cloudinary Free does not require a credit card.
-
-The preferred workflow is to upload directly inside Keystatic. `Cover`, `Media` source fields, and legacy Journal `Images` fields show an upload button next to the URL input. The browser uploads the file directly to Cloudinary after the site API creates a signed upload request.
-
-Configure these variables locally and in Cloudflare Pages:
-
-```text
-CLOUDINARY_CLOUD_NAME=<cloud-name>
-CLOUDINARY_API_KEY=<api-key>
-CLOUDINARY_API_SECRET=<api-secret>
-MEDIA_UPLOAD_TOKEN=<private editor upload token>
-```
-
-The `MEDIA_UPLOAD_TOKEN` is a private shared token for the editor UI. Enter it once in the Keystatic upload field; it is saved in the browser's local storage and sent only to the same-origin signature endpoint.
-
-The upload flow is:
-
-```text
-Keystatic upload button
-  -> /api/media-upload-signature
-  -> browser direct upload to Cloudinary
-  -> secure_url is written back into the content field
-```
-
-Manual Cloudinary uploads still work as a fallback: copy the public delivery URL and paste the full URL into Keystatic `Source`, `Cover`, or `Video poster`.
+Cloudinary delivery URLs still work anywhere a media URL is accepted. Use this for files you do not want in Git, larger media experiments, or media that benefits from hosted management.
 
 Examples:
 
@@ -104,10 +108,10 @@ Use `Cover` for the primary image on Notes and Projects.
 Use `Media` for galleries or videos:
 
 - `Type`: `Image` or `Video`.
-- `Source`: local public path, Cloudinary URL, R2 key, `r2:/` key, or an uploaded Cloudinary asset.
+- `Source`: choose a file, local public path, Cloudinary URL, R2 key, or `r2:/` key.
 - `Alt text`: image alt text.
 - `Caption`: visible caption below the media.
-- `Video poster`: poster image for video items.
+- `Video poster`: choose a file or paste a poster image URL for video items.
 - `Title`: optional accessible label, especially useful for videos.
 
 Journal still keeps the old `Images` list for compatibility. New entries should prefer `Media`.

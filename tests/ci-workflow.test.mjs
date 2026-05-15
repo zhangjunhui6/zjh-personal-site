@@ -8,7 +8,7 @@ describe('GitHub Actions CI workflow', () => {
 
     assert.equal(
       packageJson.scripts.test,
-      'node --experimental-strip-types --test tests/i18n.test.mjs && node --test tests/i18n-content.test.mjs && node --experimental-strip-types --test tests/collections.test.mjs && node --experimental-strip-types --test tests/taxonomy.test.mjs && node --experimental-strip-types --test tests/search.test.mjs && node --experimental-strip-types --test tests/media.test.mjs && node --experimental-strip-types --test tests/cloudinary-signature.test.mjs && node --test tests/search-entrypoints.test.mjs && node --test tests/homepage.test.mjs && node --test tests/notes-structure.test.mjs && node --test tests/notes-hub.test.mjs && node --test tests/notes-topic-pages.test.mjs && node --test tests/software-topics.test.mjs && node --test tests/build-config.test.mjs && node --test tests/ci-workflow.test.mjs',
+      'node --experimental-strip-types --test tests/i18n.test.mjs && node --test tests/i18n-content.test.mjs && node --experimental-strip-types --test tests/collections.test.mjs && node --experimental-strip-types --test tests/taxonomy.test.mjs && node --experimental-strip-types --test tests/search.test.mjs && node --experimental-strip-types --test tests/media.test.mjs && node --test tests/search-entrypoints.test.mjs && node --test tests/homepage.test.mjs && node --test tests/notes-structure.test.mjs && node --test tests/notes-hub.test.mjs && node --test tests/notes-topic-pages.test.mjs && node --test tests/software-topics.test.mjs && node --test tests/build-config.test.mjs && node --test tests/ci-workflow.test.mjs',
     );
     assert.equal(packageJson.scripts['test:i18n'], 'node --experimental-strip-types --test tests/i18n.test.mjs');
     assert.equal(packageJson.scripts['test:i18n-content'], 'node --test tests/i18n-content.test.mjs');
@@ -16,7 +16,6 @@ describe('GitHub Actions CI workflow', () => {
     assert.equal(packageJson.scripts['test:taxonomy'], 'node --experimental-strip-types --test tests/taxonomy.test.mjs');
     assert.equal(packageJson.scripts['test:search'], 'node --experimental-strip-types --test tests/search.test.mjs');
     assert.equal(packageJson.scripts['test:media'], 'node --experimental-strip-types --test tests/media.test.mjs');
-    assert.equal(packageJson.scripts['test:cloudinary-signature'], 'node --experimental-strip-types --test tests/cloudinary-signature.test.mjs');
     assert.equal(packageJson.scripts['test:search-entrypoints'], 'node --test tests/search-entrypoints.test.mjs');
     assert.equal(packageJson.scripts['test:homepage'], 'node --test tests/homepage.test.mjs');
     assert.equal(packageJson.scripts['test:notes-structure'], 'node --test tests/notes-structure.test.mjs');

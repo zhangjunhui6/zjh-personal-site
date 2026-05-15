@@ -32,17 +32,17 @@ Keystatic storage mode is controlled by `PUBLIC_KEYSTATIC_STORAGE`, with `KEYSTA
 
 ## Media
 
-The site can render local static media from `/public`, full hosted media URLs such as Cloudinary delivery URLs, and optional R2 keys.
+The site can render editor-uploaded repository media from `/public/media`, local static media from `/public`, full hosted media URLs such as Cloudinary delivery URLs, and optional R2 keys.
 
-Local files and full URLs do not require extra Cloudflare Pages variables. If R2 is enabled later, configure `PUBLIC_MEDIA_BASE_URL` to the public R2 custom domain, for example:
+Keystatic media uploads are stored in GitHub and do not require Cloudinary API keys or extra Cloudflare Pages variables. If R2 is enabled later, configure `PUBLIC_MEDIA_BASE_URL` to the public R2 custom domain, for example:
 
 ```text
 https://media.example.com
 ```
 
-Content fields may use full URLs, local `/images/...` or `/videos/...` public paths, or R2 object keys such as `images/notes/demo/cover.webp`. R2 keys are resolved against `PUBLIC_MEDIA_BASE_URL`; full URLs and local public paths are left unchanged.
+Content fields may use generated `/media/...` paths, full URLs, local `/images/...` or `/videos/...` public paths, or R2 object keys such as `images/notes/demo/cover.webp`. R2 keys are resolved against `PUBLIC_MEDIA_BASE_URL`; full URLs and local public paths are left unchanged.
 
-See `docs/media-workflow.md` for the local, Cloudinary, and optional R2 workflow.
+See `docs/media-workflow.md` for the editor upload, Cloudinary URL, and optional R2 workflow.
 
 ## Keystatic Admin
 
@@ -60,10 +60,6 @@ Production uses Keystatic GitHub mode. Configure these Cloudflare Pages producti
 - `KEYSTATIC_GITHUB_CLIENT_SECRET`: copy from local `.env`
 - `KEYSTATIC_SECRET`: copy from local `.env`
 - `PUBLIC_KEYSTATIC_GITHUB_APP_SLUG`: `zhangjunhui6-keystatic`
-- `CLOUDINARY_CLOUD_NAME`: Cloudinary cloud name for direct editor uploads.
-- `CLOUDINARY_API_KEY`: Cloudinary API key for signed direct uploads.
-- `CLOUDINARY_API_SECRET`: Cloudinary API secret for signed direct uploads.
-- `MEDIA_UPLOAD_TOKEN`: private token entered in Keystatic before uploading media.
 
 Do not commit real secret values. The GitHub App `zhangjunhui6-keystatic` should be installed only on `zhangjunhui6/zjh-personal-site`.
 

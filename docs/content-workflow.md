@@ -128,8 +128,8 @@ slug 一旦公开后尽量稳定。标题如果只是润色，优先不要改 sl
 
 - `Updated`：内容有实质更新时填写。
 - `Pinned`：只影响 `/notes/` 列表置顶，不影响标签页和归档页排序。
-- `Cover`：详情页封面图。可以填写 `/images/...` 本地路径、Cloudinary 完整 URL，或以后启用的 R2 key。启用 Cloudinary 环境变量后，也可以在 Keystatic 字段里直接上传图片。
-- `Media`：详情页正文后的图片或短视频列表。第一版优先用 `public/` 本地文件或 Cloudinary URL。
+- `Cover`：详情页封面图。可以在 Keystatic 里点 `Choose file` 上传，也可以填写 `/images/...` 本地路径、Cloudinary 完整 URL，或以后启用的 R2 key。
+- `Media`：详情页正文后的图片或短视频列表。第一版优先用 Keystatic 上传到 `public/media/`，也兼容已有 public 路径和 Cloudinary URL。
 
 ## Journal 专属字段
 
@@ -149,27 +149,26 @@ slug 一旦公开后尽量稳定。标题如果只是润色，优先不要改 sl
 
 ## 媒体字段
 
-媒体文件第一版优先用两种方式：小图片和短视频放在仓库 `public/` 下；不想进 Git 或稍大的媒体放到 Cloudinary 免费版。R2 能力保留为以后可选，不影响当前工作流。
+媒体文件第一版优先直接在 Keystatic 字段里点 `Choose file`。编辑器会把文件提交到仓库的 `public/media/` 下，并把生成的 `/media/...` 路径写回字段；保存内容后 Cloudflare Pages 会自动重新部署。
 
 推荐路径：
 
 ```text
-public/images/notes/<slug>/cover.webp
-public/images/journal/<slug>/001.webp
-public/videos/projects/<slug>/demo.mp4
-public/videos/projects/<slug>/demo-poster.webp
+public/media/notes/<slug>/cover.webp
+public/media/journal/<slug>/images/0.webp
+public/media/projects/<slug>/media/0/src.mp4
+public/media/projects/<slug>/media/0/poster.webp
 ```
 
 可填写的 `Source` 形式：
 
 - `/images/notes/demo/cover.webp`
+- `/media/projects/demo/media/0/src.mp4`
 - `/videos/projects/demo/demo.mp4`
 - `https://res.cloudinary.com/<cloud-name>/image/upload/.../cover.webp`
 - `/images/robotics/vla/openvla-architecture.svg`
 
 以后如果启用 R2，也可以填写 `images/notes/demo/cover.webp` 或 `r2:/videos/projects/demo/demo.mp4`，并通过 `PUBLIC_MEDIA_BASE_URL` 解析。
-
-Cloudinary 推荐工作流是在 Keystatic 的 `Cover` 或 `Media > Source` 字段里点击上传。浏览器会直接上传到 Cloudinary，上传成功后字段会自动写入 `secure_url`。
 
 短视频只使用已经压缩好的 `.mp4` 或 `.webm`，并尽量填写 `Video poster`。长视频优先放到视频平台或 Cloudinary，不建议进仓库。
 
